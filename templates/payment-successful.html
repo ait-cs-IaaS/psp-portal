@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            color: green;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Successful!</h1>
+    <p>Your payment has been processed successfully.</p>
+
+    <div class="button-container">
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+
+        <form action="/payment-page" method="GET">
+            <button type="submit">Go Back to Payment Page</button>
+        </form>
+    </div>
+</body>
+</html>

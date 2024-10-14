@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        input, select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        #mfa-container, #dual-mfa-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #payment-message, #mfa-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Payment Portal</h1>
+    <p>You are now logged in and can make a payment.</p>
+    <button onclick="showPaymentForm()">Send Payment</button>
+
+    <!-- Payment Form -->
+    <form id="payment-form">
+        <input type="text" id="iban" placeholder="IBAN" required>
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="date" id="execution-date" required>
+        <input type="number" id="sum" placeholder="Sum (EUR)" required>
+        <button type="button" onclick="processPayment()">Submit Payment</button>
+    </form>
+
+    <!-- Single MFA Field -->
+    <div id="mfa-container">
+        <h3>Enter MFA Token</h3>
+        <input type="number" id="mfa-token" placeholder="Enter MFA Token" required>
+        <button type="button" onclick="verifySingleMFA()">Verify MFA Token</button>
+    </div>
+
+    <!-- Dual MFA Fields -->
+    <div id="dual-mfa-container">
+        <h3>Enter Two MFA Tokens for Approval</h3>
+        <input type="number" id="mfa-token1" placeholder="Enter MFA Token 1" required>
+        <input type="number" id="mfa-token2" placeholder="Enter MFA Token 2" required>
+        <button type="button" onclick="verifyDualMFA()">Verify MFA Tokens</button>
+    </div>
+
+    <p id="payment-message"></p>
+    <p id="mfa-message"></p>
+
+    <!-- Logout Button -->
+    <button id="logout-button" onclick="logout()">Logout</button>
+
+    <script>
+        // Function to show the payment form when "Send Payment" button is clicked
+        function showPaymentForm() {
+            document.getElementById('payment-form').style.display = 'block'; // Show the payment form
+        }
+
+        // Function to process the payment and show MFA fields based on the payment sum
+        function processPayment() {
+            const sum = parseFloat(document.getElementById('sum').value);
+            const paymentMessage = document.getElementById('payment-message');
+
+            if (isNaN(sum) || sum <= 0) {
+                paymentMessage.textContent = 'Please enter a valid payment amount.';
+                return;
+            }
+
+            paymentMessage.textContent = ''; // Clear any previous messages
+
+            // If payment sum is less than 50,000, show single MFA field
+            if (sum < 50000) {
+                document.getElementById('mfa-container').style.display = 'block';
+                document.getElementById('dual-mfa-container').style.display = 'none';
+            } else {
+                // Show dual MFA fields if payment sum is 50,000 or more
+                document.getElementById('dual-mfa-container').style.display = 'block';
+                document.getElementById('mfa-container').style.display = 'none';
+            }
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->
+</body>
+</html>
