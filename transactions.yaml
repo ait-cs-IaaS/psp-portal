@@ -1,0 +1,834 @@
+transactions:
+transactions:
+  - transaction_id: "TXN33910330"
+    date: "2024-11-02"
+    time: "08:31:14"
+    amount: 3124.50
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Office Supplies Direct"
+      account_number: "LU491023948192847281"
+    description: "Office supplies purchase"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910331"
+    date: "2024-11-02"
+    time: "08:52:39"
+    amount: 8452.33
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Marketing Solutions"
+      account_number: "LU473920193847293847"
+    description: "Marketing services for Q4 campaign"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910332"
+    date: "2024-11-02"
+    time: "09:12:47"
+    amount: 5823.90
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Consultancy Client Z"
+      account_number: "LU203948192873912849"
+    description: "Consultancy fees payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910333"
+    date: "2024-11-02"
+    time: "09:36:13"
+    amount: 2475.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "IT Security Services"
+      account_number: "LU102938493274812938"
+    description: "Quarterly security software subscription"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910334"
+    date: "2024-11-02"
+    time: "09:57:45"
+    amount: 7125.67
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Corporate Travel Co."
+      account_number: "LU847293847928374829"
+    description: "Corporate travel expenses"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910335"
+    date: "2024-11-02"
+    time: "10:13:22"
+    amount: 4239.50
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Legal Advisors"
+      account_number: "LU283847293847928374"
+    description: "Legal consultation fees"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910336"
+    date: "2024-11-02"
+    time: "10:35:04"
+    amount: 1500.00
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Client Refund Ltd."
+      account_number: "LU102938493847293847"
+    description: "Refund for overcharged services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910337"
+    date: "2024-11-02"
+    time: "10:52:58"
+    amount: 94000.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Real Estate Investments"
+      account_number: "LU938472093847293847"
+    description: "Property investment payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910338"
+    date: "2024-11-02"
+    time: "11:16:21"
+    amount: 11000.80
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Corporate Client C"
+      account_number: "LU182937493847293847"
+    description: "Payment for business consultancy"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910339"
+    date: "2024-11-02"
+    time: "11:38:17"
+    amount: 1935.45
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Stationery Supplies"
+      account_number: "LU584738472938472983"
+    description: "Purchase of office stationery"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910340"
+    date: "2024-11-02"
+    time: "11:59:09"
+    amount: 43256.75
+    currency: "EUR"
+    type: "debit"
+    status: "not authorized"
+    account:
+      name: "IT Infrastructure Services"
+      account_number: "LU192837491823749182"
+    description: "Server maintenance services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910341"
+    date: "2024-11-02"
+    time: "12:11:45"
+    amount: 56500.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Corporate Leasing Inc."
+      account_number: "LU938472938472938473"
+    description: "Lease payment for office building"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910342"
+    date: "2024-11-02"
+    time: "12:35:27"
+    amount: 2784.35
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Printing Services Ltd."
+      account_number: "LU394820394820394820"
+    description: "Printing materials for office"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910343"
+    date: "2024-11-02"
+    time: "12:58:18"
+    amount: 10234.25
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Software Development Client Y"
+      account_number: "LU293847293847293847"
+    description: "Payment for software development services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910344"
+    date: "2024-11-02"
+    time: "13:14:30"
+    amount: 1550.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "HR Training Co."
+      account_number: "LU283847283948293847"
+    description: "HR training fees"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910345"
+    date: "2024-11-02"
+    time: "13:36:47"
+    amount: 3200.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Tech Repairs"
+      account_number: "LU193847283847283847"
+    description: "Repair services for office equipment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910346"
+    date: "2024-11-02"
+    time: "13:54:22"
+    amount: 12800.00
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Tech Solutions Client"
+      account_number: "LU948293847293847283"
+    description: "Payment received for tech services"
+    location: "Lustrien"
+
+
+  - transaction_id: "TXN33910347"
+    date: "2024-11-02"
+    time: "14:12:45"
+    amount: 6590.25
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Catering Co."
+      account_number: "LU382938473827394847"
+    description: "Catering services for business event"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910348"
+    date: "2024-11-02"
+    time: "14:38:30"
+    amount: 14560.90
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Event Hosting Client A"
+      account_number: "LU193847283847293847"
+    description: "Payment for hosting corporate event"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910349"
+    date: "2024-11-02"
+    time: "15:10:54"
+    amount: 3500.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Stationery World"
+      account_number: "LU948293847293847293"
+    description: "Purchase of office supplies"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910350"
+    date: "2024-11-02"
+    time: "15:35:18"
+    amount: 7294.15
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "IT Hardware Solutions"
+      account_number: "LU183948293847293847"
+    description: "Payment for new office hardware"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910351"
+    date: "2024-11-02"
+    time: "16:05:32"
+    amount: 19500.00
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Consultancy Client B"
+      account_number: "LU102938473827394847"
+    description: "Consulting fees received"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910352"
+    date: "2024-11-02"
+    time: "16:45:47"
+    amount: 8600.60
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Marketing Solutions"
+      account_number: "LU847293847283928472"
+    description: "Advertising and marketing campaign costs"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910353"
+    date: "2024-11-02"
+    time: "17:12:25"
+    amount: 4892.45
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Office Maintenance Services"
+      account_number: "LU102394839283748293"
+    description: "Payment for office cleaning and maintenance"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910354"
+    date: "2024-11-02"
+    time: "17:43:50"
+    amount: 15750.30
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Business Client D"
+      account_number: "LU284738492384729384"
+    description: "Payment received for software consulting services"
+    location: "Lustrien"
+transactions:
+  - transaction_id: "TXN33910355"
+    date: "2023-11-03"
+    time: "08:42:15"
+    amount: 4390.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Office Furniture Depot"
+      account_number: "LU394820394820394820"
+    description: "Office furniture purchase"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910356"
+    date: "2023-11-03"
+    time: "09:23:48"
+    amount: 6700.90
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Catering Services Ltd."
+      account_number: "LU284738293847283847"
+    description: "Corporate catering services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910357"
+    date: "2023-11-03"
+    time: "10:05:27"
+    amount: 8950.50
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Client E Refund"
+      account_number: "LU283847293847192837"
+    description: "Refund for overpayment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910358"
+    date: "2023-11-03"
+    time: "11:15:40"
+    amount: 1280.25
+    currency: "EUR"
+    type: "debit"
+    status: "not authorized"
+    account:
+      name: "Local Printing Services"
+      account_number: "LU293847192837472839"
+    description: "Printing services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910359"
+    date: "2023-11-03"
+    time: "12:30:22"
+    amount: 62350.00
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Real Estate Holdings"
+      account_number: "LU493847284729384729"
+    description: "Property acquisition payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910360"
+    date: "2023-11-03"
+    time: "13:48:35"
+    amount: 9435.35
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "IT Services Ltd."
+      account_number: "LU493847192837472839"
+    description: "IT infrastructure services for office"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910361"
+    date: "2023-11-03"
+    time: "14:25:50"
+    amount: 7123.40
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Client X"
+      account_number: "LU193847283947293847"
+    description: "Payment received for business consulting services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910362"
+    date: "2023-11-03"
+    time: "15:10:33"
+    amount: 5020.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Business Supplies Ltd."
+      account_number: "LU482930847293847293"
+    description: "Purchase of office supplies"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910363"
+    date: "2023-11-03"
+    time: "15:52:40"
+    amount: 3845.60
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Marketing Agency"
+      account_number: "LU193847293847192837"
+    description: "Advertising campaign costs"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910364"
+    date: "2023-11-03"
+    time: "16:25:27"
+    amount: 17985.25
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Corporate Client Y"
+      account_number: "LU283847293847928374"
+    description: "Consulting services fees"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910365"
+    date: "2023-11-03"
+    time: "16:55:55"
+    amount: 11835.50
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Legal Services"
+      account_number: "LU293847192837472839"
+    description: "Payment for legal consultation"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910366"
+    date: "2023-11-03"
+    time: "17:20:45"
+    amount: 2305.10
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Café Suppliers Ltd."
+      account_number: "LU392847192837472839"
+    description: "Office coffee supplies"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910367"
+    date: "2023-11-03"
+    time: "17:55:03"
+    amount: 15920.90
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Client Z"
+      account_number: "LU192847293847928374"
+    description: "Payment received for financial services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910368"
+    date: "2023-11-03"
+    time: "18:15:29"
+    amount: 4350.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Stationery Supplies"
+      account_number: "LU483920394820394820"
+    description: "Office supplies for Q4"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910369"
+    date: "2023-11-03"
+    time: "18:29:48"
+    amount: 12590.25
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "International Client M"
+      account_number: "LU293847283847293847"
+    description: "Payment received for international consulting services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910370"
+    date: "2024-11-04"
+    time: "09:45:00"
+    amount: 11854.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Accounting Services"
+      account_number: "LU495872034982374892"
+    description: "Quarterly accounting services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910371"
+    date: "2024-11-04"
+    time: "10:10:33"
+    amount: 7529.42
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Corporate Client B"
+      account_number: "LU209483920938120983"
+    description: "Consulting services payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910372"
+    date: "2024-11-04"
+    time: "10:50:12"
+    amount: 2463.88
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Office Supplies Hub"
+      account_number: "LU948273018273481029"
+    description: "Purchase of office supplies"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910373"
+    date: "2024-11-04"
+    time: "11:25:40"
+    amount: 9231.45
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Client X Consulting"
+      account_number: "LU482930472103948291"
+    description: "Payment received for financial consulting"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910374"
+    date: "2024-11-04"
+    time: "12:50:55"
+    amount: 44312.89
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Real Estate Brokers"
+      account_number: "LU309284729384720183"
+    description: "Real estate consultancy fees"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910375"
+    date: "2024-11-04"
+    time: "13:30:20"
+    amount: 21985.63
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Media Services Ltd."
+      account_number: "LU938472983742817294"
+    description: "Annual subscription to media monitoring services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910376"
+    date: "2024-11-04"
+    time: "14:00:30"
+    amount: 7065.30
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Software Development Client"
+      account_number: "LU203847239482384711"
+    description: "Payment for software development project"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910377"
+    date: "2024-11-04"
+    time: "15:10:45"
+    amount: 34879.21
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Global Tech Supplies"
+      account_number: "LU293847392103947829"
+    description: "Hardware purchase for office"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910378"
+    date: "2024-11-04"
+    time: "16:20:15"
+    amount: 5987.93
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Consultancy Client"
+      account_number: "LU102948123902182034"
+    description: "Payment received for business consultancy"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910379"
+    date: "2024-11-04"
+    time: "17:45:30"
+    amount: 17734.66
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Legal Services"
+      account_number: "LU120938472893478290"
+    description: "Legal consultation services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910380"
+    date: "2024-11-05"
+    time: "09:45:12"
+    amount: 3579.42
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "City Water Utility"
+      account_number: "LU482020193622921111"
+    description: "Monthly water bill payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910381"
+    date: "2024-11-05"
+    time: "10:05:45"
+    amount: 11984.75
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "GlobalNet Telecom"
+      account_number: "LU271903762290298221"
+    description: "Quarterly internet service payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910382"
+    date: "2024-11-05"
+    time: "10:32:08"
+    amount: 24863.90
+    currency: "EUR"
+    type: "debit"
+    status: "not authorized"
+    account:
+      name: "PrimeTech Ltd."
+      account_number: "LU601923047281099322"
+    description: "Equipment purchase for office"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910383"
+    date: "2024-11-05"
+    time: "10:55:00"
+    amount: 15342.80
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "International Client"
+      account_number: "LU198273491238401244"
+    description: "Project consultancy payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910384"
+    date: "2024-11-05"
+    time: "11:15:23"
+    amount: 6015.33
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "International Clients Ltd."
+      account_number: "LU784923472193210211"
+    description: "Payment received for project milestone"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910385"
+    date: "2024-11-05"
+    time: "12:45:50"
+    amount: 17492.99
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "InsuranceSecure"
+      account_number: "LU129048282393872333"
+    description: "Quarterly insurance premium payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910386"
+    date: "2024-11-05"
+    time: "13:05:00"
+    amount: 30087.65
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Government Grants"
+      account_number: "LU574923982193824810"
+    description: "Grant received for business development"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910387"
+    date: "2024-11-05"
+    time: "13:20:18"
+    amount: 45349.18
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Business Leasing Corp."
+      account_number: "LU384032839401293021"
+    description: "Monthly office leasing payment"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910388"
+    date: "2024-11-05"
+    time: "14:10:30"
+    amount: 5128.91
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Corporate Client Refund"
+      account_number: "LU102394820192039848"
+    description: "Refund from overcharged services"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910389"
+    date: "2024-11-05"
+    time: "14:45:29"
+    amount: 2021.47
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Lustrien Coffee Suppliers"
+      account_number: "LU582940237102983211"
+    description: "Catering supplies for office"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910390"
+    date: "2024-11-05"
+    time: "15:10:07"
+    amount: 3489.57
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Stationery Co."
+      account_number: "LU384022763920191212"
+    description: "Office stationery purchase"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910391"
+    date: "2024-11-05"
+    time: "16:05:15"
+    amount: 1075.80
+    currency: "EUR"
+    type: "credit"
+    status: "completed"
+    account:
+      name: "Refund Desk Ltd."
+      account_number: "LU239047284109321933"
+    description: "Refund for overcharged service"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910392"
+    date: "2024-11-05"
+    time: "17:35:30"
+    amount: 9998.22
+    currency: "EUR"
+    type: "debit"
+    status: "completed"
+    account:
+      name: "Marketing Solutions Inc."
+      account_number: "LU839210938483920239"
+    description: "Marketing services for Q4"
+    location: "Lustrien"
+
+  - transaction_id: "TXN33910393"
+    date: "2024-11-05"
+    time: "18:55:12"
+    amount: 27492.67
+    currency: "EUR"
+    type: "debit"
+    status: "not authorized"
+    account:
+      name: "TechRepair Services"
+      account_number: "LU102938472920193011"
+    description: "Annual maintenance of office servers"
+    location: "Lustrien"
