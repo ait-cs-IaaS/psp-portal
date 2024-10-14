@@ -1,5 +1,4 @@
 transactions:
-transactions:
   - transaction_id: "TXN33910330"
     date: "2024-11-02"
     time: "08:31:14"
@@ -221,7 +220,6 @@ transactions:
     description: "Payment received for tech services"
     location: "Lustrien"
 
-
   - transaction_id: "TXN33910347"
     date: "2024-11-02"
     time: "14:12:45"
@@ -325,7 +323,7 @@ transactions:
       account_number: "LU284738492384729384"
     description: "Payment received for software consulting services"
     location: "Lustrien"
-transactions:
+
   - transaction_id: "TXN33910355"
     date: "2023-11-03"
     time: "08:42:15"
