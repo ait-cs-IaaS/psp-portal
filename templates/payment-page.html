@@ -60,6 +60,7 @@
     <h1>Welcome to the Payment Portal</h1>
     <p>You are now logged in and can make a payment.</p>
     <button onclick="showPaymentForm()">Send Payment</button>
+    <button onclick="window.location.href='/transaction-history'">View Transaction History</button> <!-- Added Button -->
 
     <!-- Payment Form -->
     <form id="payment-form">
@@ -90,36 +91,6 @@
 
     <!-- Logout Button -->
     <button id="logout-button" onclick="logout()">Logout</button>
-
-    <script>
-        // Function to show the payment form when "Send Payment" button is clicked
-        function showPaymentForm() {
-            document.getElementById('payment-form').style.display = 'block'; // Show the payment form
-        }
-
-        // Function to process the payment and show MFA fields based on the payment sum
-        function processPayment() {
-            const sum = parseFloat(document.getElementById('sum').value);
-            const paymentMessage = document.getElementById('payment-message');
-
-            if (isNaN(sum) || sum <= 0) {
-                paymentMessage.textContent = 'Please enter a valid payment amount.';
-                return;
-            }
-
-            paymentMessage.textContent = ''; // Clear any previous messages
-
-            // If payment sum is less than 50,000, show single MFA field
-            if (sum < 50000) {
-                document.getElementById('mfa-container').style.display = 'block';
-                document.getElementById('dual-mfa-container').style.display = 'none';
-            } else {
-                // Show dual MFA fields if payment sum is 50,000 or more
-                document.getElementById('dual-mfa-container').style.display = 'block';
-                document.getElementById('mfa-container').style.display = 'none';
-            }
-        }
-    </script>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->
 </body>

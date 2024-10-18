@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
 from backend.database import User
+from backend.database import Transaction
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -82,3 +83,23 @@ def payment_success():
 def logout():
     session.clear()  # Clear the entire session for security
     return redirect(url_for('api.index'))  # Redirect the user to the login page after logout
+
+@api.route('/transaction-history', methods=['GET'])
+def transaction_history():
+    # Check if the user is logged in
+    if 'username' not in session:
+        return redirect(url_for('api.index'))
+
+    # Get the current page number from query parameters (default to 1)
+    page = request.args.get('page', 1, type=int)
+
+    # Query the transactions ordered by date descending
+    transactions_query = Transaction.query.order_by(Transaction.date.desc(), Transaction.time.desc())
+
+    # Pagination: 12 transactions per page, no error out
+    transactions_paginated = transactions_query.paginate(page=page, per_page=12, error_out=False)
+
+    # Get the transactions for the current page
+    transactions = transactions_paginated.items
+
+    return render_template('transaction-history.html', transactions=transactions, page=page)

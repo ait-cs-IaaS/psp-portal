@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            text-decoration: none;
+        }
+        .pagination a:hover {
+            background-color: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transaction History</h1>
+
+    <table>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Account Name</th>
+            <th>Account Number</th>
+            <th>Description</th>
+            <th>Location</th>
+        </tr>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.transaction_id }}</td>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.time }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.currency }}</td>
+            <td>{{ transaction.status }}</td>
+            <td>{{ transaction.account_name }}</td>
+            <td>{{ transaction.account_number }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.location }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('api.transaction_history', page=page-1) }}">Previous</a>
+        {% endif %}
+        <a href="{{ url_for('api.transaction_history', page=page+1) }}">Next</a>
+    </div>
+
+    <button onclick="window.location.href='/payment-page'">Back to Payment Portal</button>
+</body>
+</html>
