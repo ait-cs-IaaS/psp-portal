@@ -78,11 +78,7 @@ def payment_success():
     return render_template('payment-successful.html')
 
 
-# Logout route
-@api.route('/logout', methods=['POST'])
-def logout():
-    session.clear()  # Clear the entire session for security
-    return redirect(url_for('api.index'))  # Redirect the user to the login page after logout
+
 
 @api.route('/transaction-history', methods=['GET'])
 def transaction_history():
@@ -103,3 +99,11 @@ def transaction_history():
     transactions = transactions_paginated.items
 
     return render_template('transaction-history.html', transactions=transactions, page=page)
+
+
+
+# Logout route
+@api.route('/logout', methods=['POST'])
+def logout():
+    session.clear()  # Clear the entire session for security
+    return redirect(url_for('api.index'))  # Redirect the user to the login page after logout
