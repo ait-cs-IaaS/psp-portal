@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
-from backend.database import User
-from backend.database import Transaction
+from backend.database import User, Transaction  # Import User and Transaction models
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -25,7 +24,7 @@ def login():
 
     if user and user.password == password:
         # Store the user's username in session and trigger MFA request
-        session['username'] = username
+        session['username'] = username  # <-- This saves the logged-in user's username in the session
         session['mfa_required'] = True  # Indicate MFA is required
         print(f"Login successful for user: {username}, prompting for MFA.")
         return jsonify({"mfa_required": True, "message": "MFA required. Please enter your MFA token."}), 200
@@ -34,7 +33,8 @@ def login():
         print(f"Login failed for user: {username}")
         return jsonify({"error": "Invalid username or password"}), 401
 
-# MFA verification route
+
+# MFA verification route (login)
 @api.route('/verify-login-mfa', methods=['POST'])
 def verify_mfa():
     data = request.json
@@ -66,6 +66,40 @@ def payment():
     # If the user is logged in, render the payment.html template
     return render_template('payment-page.html')
 
+# Route for handling MFA verification during payment
+@api.route('/verify-payment-mfa', methods=['POST'])
+def verify_payment_mfa():
+    data = request.json
+    amount = data.get('amount')
+    mfa_token = data.get('mfaToken')
+    second_username = data.get('secondUsername')  # Second username for dual MFA
+    second_mfa_token = data.get('secondMfaToken')
+
+    # Ensure user is logged in
+    if 'username' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    # Fetch the logged-in user from the session
+    username = session['username']
+    user = User.query.filter_by(username=username).first()
+
+    # Verify the logged-in user's MFA token
+    if not user or str(user.mfa) != str(mfa_token):
+        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
+
+    # If the amount is 50,000 or more, verify the second MFA token
+    if amount >= 50000:
+        second_user = User.query.filter_by(username=second_username).first()
+
+        if not second_user or str(second_user.mfa) != str(second_mfa_token):
+            return jsonify({"error": "Invalid second MFA token or user"}), 401
+
+        # If both MFA tokens are verified, confirm the transaction
+        return jsonify({"success": True, "message": "Payment authorized with double MFA"}), 200
+
+    # If the amount is less than 50,000, only the logged-in user's MFA is required
+    return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
+
 # Successful payment route
 @api.route('/payment-successful', methods=['GET'])
 def payment_success():
@@ -77,9 +111,7 @@ def payment_success():
     # Render the successful payment page without any additional messages
     return render_template('payment-successful.html')
 
-
-
-
+# Transaction history route
 @api.route('/transaction-history', methods=['GET'])
 def transaction_history():
     # Check if the user is logged in
@@ -99,8 +131,6 @@ def transaction_history():
     transactions = transactions_paginated.items
 
     return render_template('transaction-history.html', transactions=transactions, page=page)
-
-
 
 # Logout route
 @api.route('/logout', methods=['POST'])

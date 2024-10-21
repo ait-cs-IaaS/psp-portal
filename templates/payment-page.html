@@ -93,6 +93,12 @@
     <button id="logout-button" onclick="logout()">Logout</button>
 
     <script>
+
+        // Reset MFA attempts when the payment page is loaded
+    window.onload = function() {
+        loadPaymentPage();
+    };
+    
         // Function to show the payment form when "Send Payment" button is clicked
         function showPaymentForm() {
             document.getElementById('payment-form').style.display = 'block'; // Show the payment form
