@@ -151,6 +151,13 @@ function verifyDualMFA() {
     const amount = parseFloat(document.getElementById('sum').value);
     const secondUsername = prompt("Enter the username of the second user for dual MFA");
 
+    // Reset MFA attempt counter before verification to allow fresh attempts
+    mfaAttemptsPayment = 0;
+    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Reset in sessionStorage
+
+    // Log the current number of payment MFA attempts
+    console.log("MFA attempts for payment (reset to 0): " + mfaAttemptsPayment);
+
     if (mfaAttemptsPayment >= maxAttemptsPayment) {
         document.getElementById('mfa-message').textContent = 'MFA has already been attempted.';
         return;
