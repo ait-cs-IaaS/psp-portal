@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
-from backend.database import User, Transaction  # Import User and Transaction models
+from backend.database import User, Transaction, db, load_transactions_from_yaml, save_transactions_to_yaml  # Import necessary functions
+from datetime import datetime
+import random
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -33,7 +35,6 @@ def login():
         print(f"Login failed for user: {username}")
         return jsonify({"error": "Invalid username or password"}), 401
 
-
 # MFA verification route (login)
 @api.route('/verify-login-mfa', methods=['POST'])
 def verify_mfa():
@@ -66,7 +67,6 @@ def payment():
     # If the user is logged in, render the payment.html template
     return render_template('payment-page.html')
 
-# Route for handling MFA verification during payment
 @api.route('/verify-payment-mfa', methods=['POST'])
 def verify_payment_mfa():
     data = request.json
@@ -74,6 +74,19 @@ def verify_payment_mfa():
     mfa_token = data.get('mfaToken')
     second_username = data.get('secondUsername')  # Second username for dual MFA
     second_mfa_token = data.get('secondMfaToken')
+
+    # Transaction data from the form, ensure all fields are provided
+    transaction_data = {
+        'amount': amount,
+        'currency': data.get('currency', 'EUR'),  # Default to 'EUR' if not provided
+        'type': data.get('type', 'credit'),  # Default type to 'credit' if not provided
+        'account_name': data.get('accountName', 'Default Account Name'),  # Use a default if not provided
+        'account_number': data.get('iban', 'Default IBAN'),  # Use a default IBAN if not provided
+        'description': data.get('description', 'Payment description'),  # Default description if not provided
+        'location': data.get('location', 'Unknown Location'),  # Default location if not provided
+        'date': datetime.now().strftime("%Y-%m-%d"),
+        'time': datetime.now().strftime("%H:%M:%S"),
+    }
 
     # Ensure user is logged in
     if 'username' not in session:
@@ -85,31 +98,32 @@ def verify_payment_mfa():
 
     # Verify the logged-in user's MFA token
     if not user or str(user.mfa) != str(mfa_token):
+        # If MFA fails, mark transaction as "Not Authorized" and add to history
+        transaction_data['status'] = "Not Authorized"
+        add_transaction_to_history(transaction_data)
         return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
 
-    # If the amount is 50,000 or more, verify the second MFA token
+    # If the amount is 50,000 or more, verify the second MFA token for dual authentication
     if amount >= 50000:
         second_user = User.query.filter_by(username=second_username).first()
 
         if not second_user or str(second_user.mfa) != str(second_mfa_token):
+            # If second MFA fails, mark transaction as "Not Authorized" and add to history
+            transaction_data['status'] = "Not Authorized"
+            add_transaction_to_history(transaction_data)
             return jsonify({"error": "Invalid second MFA token or user"}), 401
 
-        # If both MFA tokens are verified, confirm the transaction
+        # Both MFA tokens are verified, mark transaction as "Completed"
+        transaction_data['status'] = "Completed"
+        add_transaction_to_history(transaction_data)
         return jsonify({"success": True, "message": "Payment authorized with double MFA"}), 200
 
-    # If the amount is less than 50,000, only the logged-in user's MFA is required
+    # For payments under 50,000, only the logged-in user's MFA is required
+    transaction_data['status'] = "Completed"
+    add_transaction_to_history(transaction_data)
+
     return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
-# Successful payment route
-@api.route('/payment-successful', methods=['GET'])
-def payment_success():
-    # Check if the user is logged in
-    if 'username' not in session:
-        # If the user is not logged in, redirect to the login page
-        return redirect(url_for('api.index'))
-
-    # Render the successful payment page without any additional messages
-    return render_template('payment-successful.html')
 
 # Transaction history route
 @api.route('/transaction-history', methods=['GET'])
@@ -131,6 +145,55 @@ def transaction_history():
     transactions = transactions_paginated.items
 
     return render_template('transaction-history.html', transactions=transactions, page=page)
+
+
+@api.route('/payment-successful', methods=['GET'])
+def payment_success():
+    # Check if the user is logged in
+    if 'username' not in session:
+        return redirect(url_for('api.index'))  # If not logged in, redirect to login
+
+    return render_template('payment-successful.html')
+
+
+def add_transaction_to_history(transaction_data):
+    transaction_id = f"TXN{random.randint(10000000, 99999999)}"
+    transaction_data['transaction_id'] = transaction_id
+
+    # Add to database
+    new_transaction = Transaction(
+        transaction_id=transaction_data['transaction_id'],
+        date=transaction_data['date'],
+        time=transaction_data['time'],
+        amount=transaction_data['amount'],
+        currency=transaction_data['currency'],
+        type=transaction_data['type'],
+        status=transaction_data['status'],
+        account_name=transaction_data['account_name'],
+        account_number=transaction_data['account_number'],
+        description=transaction_data['description'],
+        location=transaction_data['location']
+    )
+    db.session.add(new_transaction)
+    db.session.commit()
+
+    # Add to YAML file
+    transactions = load_transactions_from_yaml()
+    transactions.append({
+        'transaction_id': transaction_data['transaction_id'],
+        'date': transaction_data['date'],
+        'time': transaction_data['time'],
+        'amount': transaction_data['amount'],
+        'currency': transaction_data['currency'],
+        'type': transaction_data['type'],
+        'status': transaction_data['status'],
+        'account_name': transaction_data['account_name'],
+        'account_number': transaction_data['account_number'],
+        'description': transaction_data['description'],
+        'location': transaction_data['location']
+    })
+    save_transactions_to_yaml(transactions)
+    print(f"Transaction {transaction_id} added to history with status: {transaction_data['status']}")
 
 # Logout route
 @api.route('/logout', methods=['POST'])

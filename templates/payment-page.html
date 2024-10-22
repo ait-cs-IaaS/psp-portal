@@ -65,9 +65,16 @@
     <!-- Payment Form -->
     <form id="payment-form">
         <input type="text" id="iban" placeholder="IBAN" required>
-        <input type="text" id="name" placeholder="Name" required>
+        <input type="text" id="name" placeholder="Account Name" required>
         <input type="date" id="execution-date" required>
         <input type="number" id="sum" placeholder="Sum (EUR)" required>
+        <input type="text" id="currency" placeholder="Currency" value="EUR" required> <!-- Currency -->
+        <select id="transaction-type" required>
+            <option value="debit">Debit</option>
+            <option value="credit">Credit</option>
+        </select> <!-- Type of transaction (Debit/Credit) -->
+        <input type="text" id="description" placeholder="Description" required> <!-- Description -->
+        <input type="text" id="location" placeholder="Location" required> <!-- Location -->
         <button type="button" onclick="processPayment()">Submit Payment</button>
     </form>
 
@@ -93,16 +100,16 @@
     <button id="logout-button" onclick="logout()">Logout</button>
 
     <script>
-
         // Reset MFA attempts when the payment page is loaded
-    window.onload = function() {
-        loadPaymentPage();
-    };
+        window.onload = function() {
+            loadPaymentPage();
+        };
     
         // Function to show the payment form when "Send Payment" button is clicked
         function showPaymentForm() {
             document.getElementById('payment-form').style.display = 'block'; // Show the payment form
         }
+
         // Function to process the payment and show MFA fields based on the payment sum
         function processPayment() {
             const sum = parseFloat(document.getElementById('sum').value);
@@ -112,6 +119,7 @@
                 return;
             }
             paymentMessage.textContent = ''; // Clear any previous messages
+
             // If payment sum is less than 50,000, show single MFA field
             if (sum < 50000) {
                 document.getElementById('mfa-container').style.display = 'block';
@@ -124,7 +132,6 @@
         }
     </script>
     
-
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->
 </body>
 </html>

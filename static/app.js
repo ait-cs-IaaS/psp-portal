@@ -95,18 +95,9 @@ function verifySingleMFA() {
     const amount = parseFloat(document.getElementById('sum').value);
     const mfaMessage = document.getElementById('mfa-message');
 
-    // Each time user clicks "Submit Payment", reset the MFA attempt counter to allow a fresh start
+    // Reset MFA attempt counter before every new submission
     mfaAttemptsPayment = 0;
-    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Reset in sessionStorage
-
-    // Log the current number of payment MFA attempts
-    console.log("MFA attempts for payment (reset to 0): " + mfaAttemptsPayment);
-
-    if (mfaAttemptsPayment >= maxAttemptsPayment) {
-        // Prevent further MFA attempts if the limit is reached
-        mfaMessage.textContent = 'MFA has already been attempted.';
-        return;
-    }
+    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);
 
     // Send request to backend to verify single MFA token
     fetch('/verify-payment-mfa', {
@@ -114,26 +105,24 @@ function verifySingleMFA() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             amount: amount,
-            mfaToken: mfaToken,  // Use the same MFA token as for login
+            mfaToken: mfaToken,
+            currency: "EUR",  // Assuming the form passes EUR for now
+            type: "debit",  // Assuming debit for this transaction
+            accountName: document.getElementById('name').value,
+            iban: document.getElementById('iban').value,
+            description: document.getElementById('description').value,
+            location: document.getElementById('location').value
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Reset payment MFA attempts after successful payment
-            mfaAttemptsPayment = 0;
-            sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Store in sessionStorage
-
             mfaMessage.style.color = 'green';
             mfaMessage.textContent = 'Payment successful! Redirecting...';
-
-            // Redirect to the success page after 1 second
             setTimeout(() => {
-                window.location.href = '/payment-successful';  // Redirect to success page
+                window.location.href = '/payment-successful';
             }, 1000);
         } else {
-            mfaAttemptsPayment += 1;  // Increment the number of attempts
-            sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Store in sessionStorage
             mfaMessage.textContent = 'Invalid MFA token. Payment not authorized.';
             sendFailedAuthorization('/single-authorization-failed');
         }
@@ -144,24 +133,17 @@ function verifySingleMFA() {
     });
 }
 
+
 // Verify dual MFA tokens for payments 50,000 or more
 function verifyDualMFA() {
-    const mfaToken1 = document.getElementById('mfa-token1').value;  // Logged-in user's MFA
-    const mfaToken2 = document.getElementById('mfa-token2').value;  // Second user's MFA
+    const mfaToken1 = document.getElementById('mfa-token1').value;
+    const mfaToken2 = document.getElementById('mfa-token2').value;
     const amount = parseFloat(document.getElementById('sum').value);
     const secondUsername = prompt("Enter the username of the second user for dual MFA");
 
-    // Reset MFA attempt counter before verification to allow fresh attempts
+    // Reset MFA attempt counter before every new submission
     mfaAttemptsPayment = 0;
-    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Reset in sessionStorage
-
-    // Log the current number of payment MFA attempts
-    console.log("MFA attempts for payment (reset to 0): " + mfaAttemptsPayment);
-
-    if (mfaAttemptsPayment >= maxAttemptsPayment) {
-        document.getElementById('mfa-message').textContent = 'MFA has already been attempted.';
-        return;
-    }
+    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);
 
     // Send request to backend to verify dual MFA tokens
     fetch('/verify-payment-mfa', {
@@ -169,25 +151,18 @@ function verifyDualMFA() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             amount: amount,
-            mfaToken: mfaToken1,           // Logged-in user's MFA
-            secondUsername: secondUsername, // Second username
-            secondMfaToken: mfaToken2,      // Second user's MFA
+            mfaToken: mfaToken1,
+            secondUsername: secondUsername,
+            secondMfaToken: mfaToken2
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Reset payment MFA attempts after successful payment
-            mfaAttemptsPayment = 0;
-            sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Store in sessionStorage
-
-            window.location.href = '/payment-successful';  // Redirect to success page
+            window.location.href = '/payment-successful';
         } else {
-            mfaAttemptsPayment += 1;
-            sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);  // Store in sessionStorage
             document.getElementById('mfa-message').textContent = 'Invalid MFA tokens. Payment not authorized.';
             sendFailedAuthorization('/dual-authorization-failed');
-            handleFailedPaymentMFA();  // Hide MFA fields and reset attempts
         }
     })
     .catch(error => {
@@ -195,6 +170,8 @@ function verifyDualMFA() {
         console.error('Error during dual MFA verification:', error);
     });
 }
+
+
 
 // Process the payment and display appropriate MFA fields based on payment amount
 function processPayment() {
@@ -221,6 +198,8 @@ function processPayment() {
         document.getElementById('mfa-container').style.display = 'none';
     }
 }
+
+
 
 // Handle user logout
 function logout() {
