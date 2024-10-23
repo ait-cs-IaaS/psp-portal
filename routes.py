@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
-from backend.database import User, Transaction, db, load_transactions_from_yaml, save_transactions_to_yaml  # Import necessary functions
+from backend.database import User, Transaction, db, load_transactions_from_yaml, save_transactions_to_yaml, add_transaction_to_history  # Add the function import
 from datetime import datetime
 import random
+from flask_mail import Message
+
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -156,44 +158,6 @@ def payment_success():
     return render_template('payment-successful.html')
 
 
-def add_transaction_to_history(transaction_data):
-    transaction_id = f"TXN{random.randint(10000000, 99999999)}"
-    transaction_data['transaction_id'] = transaction_id
-
-    # Add to database
-    new_transaction = Transaction(
-        transaction_id=transaction_data['transaction_id'],
-        date=transaction_data['date'],
-        time=transaction_data['time'],
-        amount=transaction_data['amount'],
-        currency=transaction_data['currency'],
-        type=transaction_data['type'],
-        status=transaction_data['status'],
-        account_name=transaction_data['account_name'],
-        account_number=transaction_data['account_number'],
-        description=transaction_data['description'],
-        location=transaction_data['location']
-    )
-    db.session.add(new_transaction)
-    db.session.commit()
-
-    # Add to YAML file
-    transactions = load_transactions_from_yaml()
-    transactions.append({
-        'transaction_id': transaction_data['transaction_id'],
-        'date': transaction_data['date'],
-        'time': transaction_data['time'],
-        'amount': transaction_data['amount'],
-        'currency': transaction_data['currency'],
-        'type': transaction_data['type'],
-        'status': transaction_data['status'],
-        'account_name': transaction_data['account_name'],
-        'account_number': transaction_data['account_number'],
-        'description': transaction_data['description'],
-        'location': transaction_data['location']
-    })
-    save_transactions_to_yaml(transactions)
-    print(f"Transaction {transaction_id} added to history with status: {transaction_data['status']}")
 
 # Logout route
 @api.route('/logout', methods=['POST'])

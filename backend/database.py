@@ -14,12 +14,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Define the User model
+# Add the email column to the User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
-    mfa = db.Column(db.String(10), nullable=False)  # Multi-factor authentication
+    mfa = db.Column(db.String(10), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)  # Added email column
+
 
 # Define the Transaction model
 class Transaction(db.Model):
@@ -180,7 +182,8 @@ def db_insert_users_from_config():
             user = User(
                 username=username,
                 password=user_data['password'],
-                mfa=user_data['mfa']
+                mfa=user_data['mfa'],
+                email=user_data['email']  # Ensure the email is included
             )
             db.session.add(user)
         db.session.commit()

@@ -2,6 +2,8 @@ users:
   admin:
     password: admin
     mfa: 123
+    email: admin@example.com
   swilliams:
     password: tastydishes
     mfa: 456
+    email: swilliams@example.com

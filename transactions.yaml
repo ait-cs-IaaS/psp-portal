@@ -467,102 +467,27 @@ transactions:
   time: '18:55:12'
   transaction_id: TXN33910393
   type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
+- account:
+    account_number: ''
+    name: ''
+  amount: 1
   currency: EUR
   date: '2024-10-23'
   description: ''
   location: ''
   status: Completed
-  time: '10:13:30'
-  transaction_id: TXN68568898
+  time: '12:58:17'
+  transaction_id: TXN33910394
   type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
+- account:
+    account_number: ''
+    name: ''
+  amount: 1
   currency: EUR
   date: '2024-10-23'
   description: ''
   location: ''
   status: Not Authorized
-  time: '10:14:12'
-  transaction_id: TXN97554845
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:14:16'
-  transaction_id: TXN89432194
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 1
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:18:01'
-  transaction_id: TXN60258362
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:20:21'
-  transaction_id: TXN76463563
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:22:22'
-  transaction_id: TXN44488926
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:29:45'
-  transaction_id: TXN11973229
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 11
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:32:06'
-  transaction_id: TXN91912166
-  type: debit
-- account_name: ''
-  account_number: ''
-  amount: 1
-  currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '10:35:59'
-  transaction_id: TXN52787797
+  time: '12:58:28'
+  transaction_id: TXN33910395
   type: debit

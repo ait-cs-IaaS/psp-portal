@@ -1,5 +1,7 @@
 Flask
 Flask-SQLAlchemy
+Flask-Mail
+Flask-Migrate
 Flask-CORS
 Flask-JWT-Extended
 PyYAML
