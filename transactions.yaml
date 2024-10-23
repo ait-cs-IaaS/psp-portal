@@ -475,8 +475,8 @@ transactions:
   date: '2024-10-23'
   description: ''
   location: ''
-  status: Completed
-  time: '12:58:17'
+  status: Not Authorized
+  time: '13:25:25'
   transaction_id: TXN33910394
   type: debit
 - account:
@@ -487,7 +487,31 @@ transactions:
   date: '2024-10-23'
   description: ''
   location: ''
-  status: Not Authorized
-  time: '12:58:28'
+  status: Completed
+  time: '13:25:37'
   transaction_id: TXN33910395
   type: debit
+- account:
+    account_number: Default IBAN
+    name: Default Account Name
+  amount: 111111
+  currency: EUR
+  date: '2024-10-23'
+  description: Payment description
+  location: Unknown Location
+  status: Not Authorized
+  time: '13:27:29'
+  transaction_id: TXN33910396
+  type: credit
+- account:
+    account_number: Default IBAN
+    name: Default Account Name
+  amount: 1111111
+  currency: EUR
+  date: '2024-10-23'
+  description: Payment description
+  location: Unknown Location
+  status: Completed
+  time: '13:27:43'
+  transaction_id: TXN33910397
+  type: credit

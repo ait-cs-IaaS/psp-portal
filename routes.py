@@ -157,7 +157,9 @@ def payment_success():
 
     return render_template('payment-successful.html')
 
-
+@api.route('/payment-unsuccessful', methods=['GET'])
+def payment_unsuccess():
+    return render_template('payment-unsuccessful.html')
 
 # Logout route
 @api.route('/logout', methods=['POST'])

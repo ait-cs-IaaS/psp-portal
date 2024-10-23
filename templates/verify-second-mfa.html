@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify MFA</title>
+</head>
+<body>
+    <h1>Enter MFA Token for Transaction: {{ transaction_id }}</h1>
+    <form method="POST">
+        <input type="number" name="mfaToken" placeholder="MFA Token" required>
+        <button type="submit">Verify MFA</button>
+    </form>
+</body>
+</html>

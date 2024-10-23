@@ -124,7 +124,9 @@ function verifySingleMFA() {
             }, 1000);
         } else {
             mfaMessage.textContent = 'Invalid MFA token. Payment not authorized.';
-            sendFailedAuthorization('/single-authorization-failed');
+            setTimeout(() => {
+                window.location.href = '/payment-unsuccessful';  // Redirect to unsuccessful page
+            }, 1000);
         }
     })
     .catch(error => {
@@ -132,6 +134,7 @@ function verifySingleMFA() {
         mfaMessage.textContent = 'An error occurred during MFA verification. Please try again.';
     });
 }
+
 
 
 // Verify dual MFA tokens for payments 50,000 or more
@@ -162,7 +165,9 @@ function verifyDualMFA() {
             window.location.href = '/payment-successful';
         } else {
             document.getElementById('mfa-message').textContent = 'Invalid MFA tokens. Payment not authorized.';
-            sendFailedAuthorization('/dual-authorization-failed');
+            setTimeout(() => {
+                window.location.href = '/payment-unsuccessful';  // Redirect to unsuccessful page
+            }, 1000);
         }
     })
     .catch(error => {
