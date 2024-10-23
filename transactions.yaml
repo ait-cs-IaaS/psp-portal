@@ -1,310 +1,10 @@
 transactions:
 - account:
-    account_number: LU491023948192847281
-    name: Office Supplies Direct
-  amount: 3124.5
-  currency: EUR
-  date: '2024-11-02'
-  description: Office supplies purchase
-  location: Lustrien
-  status: completed
-  time: 08:31:14
-  transaction_id: TXN33910330
-  type: debit
-- account:
-    account_number: LU473920193847293847
-    name: Lustrien Marketing Solutions
-  amount: 8452.33
-  currency: EUR
-  date: '2024-11-02'
-  description: Marketing services for Q4 campaign
-  location: Lustrien
-  status: completed
-  time: 08:52:39
-  transaction_id: TXN33910331
-  type: debit
-- account:
-    account_number: LU203948192873912849
-    name: Consultancy Client Z
-  amount: 5823.9
-  currency: EUR
-  date: '2024-11-02'
-  description: Consultancy fees payment
-  location: Lustrien
-  status: completed
-  time: 09:12:47
-  transaction_id: TXN33910332
-  type: credit
-- account:
-    account_number: LU102938493274812938
-    name: IT Security Services
-  amount: 2475.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Quarterly security software subscription
-  location: Lustrien
-  status: completed
-  time: 09:36:13
-  transaction_id: TXN33910333
-  type: debit
-- account:
-    account_number: LU847293847928374829
-    name: Corporate Travel Co.
-  amount: 7125.67
-  currency: EUR
-  date: '2024-11-02'
-  description: Corporate travel expenses
-  location: Lustrien
-  status: completed
-  time: 09:57:45
-  transaction_id: TXN33910334
-  type: debit
-- account:
-    account_number: LU283847293847928374
-    name: Lustrien Legal Advisors
-  amount: 4239.5
-  currency: EUR
-  date: '2024-11-02'
-  description: Legal consultation fees
-  location: Lustrien
-  status: completed
-  time: '10:13:22'
-  transaction_id: TXN33910335
-  type: debit
-- account:
-    account_number: LU102938493847293847
-    name: Client Refund Ltd.
-  amount: 1500.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Refund for overcharged services
-  location: Lustrien
-  status: completed
-  time: '10:35:04'
-  transaction_id: TXN33910336
-  type: credit
-- account:
-    account_number: LU938472093847293847
-    name: Real Estate Investments
-  amount: 94000.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Property investment payment
-  location: Lustrien
-  status: completed
-  time: '10:52:58'
-  transaction_id: TXN33910337
-  type: debit
-- account:
-    account_number: LU182937493847293847
-    name: Corporate Client C
-  amount: 11000.8
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment for business consultancy
-  location: Lustrien
-  status: completed
-  time: '11:16:21'
-  transaction_id: TXN33910338
-  type: credit
-- account:
-    account_number: LU584738472938472983
-    name: Stationery Supplies
-  amount: 1935.45
-  currency: EUR
-  date: '2024-11-02'
-  description: Purchase of office stationery
-  location: Lustrien
-  status: completed
-  time: '11:38:17'
-  transaction_id: TXN33910339
-  type: debit
-- account:
-    account_number: LU192837491823749182
-    name: IT Infrastructure Services
-  amount: 43256.75
-  currency: EUR
-  date: '2024-11-02'
-  description: Server maintenance services
-  location: Lustrien
-  status: not authorized
-  time: '11:59:09'
-  transaction_id: TXN33910340
-  type: debit
-- account:
-    account_number: LU938472938472938473
-    name: Corporate Leasing Inc.
-  amount: 56500.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Lease payment for office building
-  location: Lustrien
-  status: completed
-  time: '12:11:45'
-  transaction_id: TXN33910341
-  type: debit
-- account:
-    account_number: LU394820394820394820
-    name: Printing Services Ltd.
-  amount: 2784.35
-  currency: EUR
-  date: '2024-11-02'
-  description: Printing materials for office
-  location: Lustrien
-  status: completed
-  time: '12:35:27'
-  transaction_id: TXN33910342
-  type: debit
-- account:
-    account_number: LU293847293847293847
-    name: Software Development Client Y
-  amount: 10234.25
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment for software development services
-  location: Lustrien
-  status: completed
-  time: '12:58:18'
-  transaction_id: TXN33910343
-  type: credit
-- account:
-    account_number: LU283847283948293847
-    name: HR Training Co.
-  amount: 1550.0
-  currency: EUR
-  date: '2024-11-02'
-  description: HR training fees
-  location: Lustrien
-  status: completed
-  time: '13:14:30'
-  transaction_id: TXN33910344
-  type: debit
-- account:
-    account_number: LU193847283847283847
-    name: Lustrien Tech Repairs
-  amount: 3200.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Repair services for office equipment
-  location: Lustrien
-  status: completed
-  time: '13:36:47'
-  transaction_id: TXN33910345
-  type: debit
-- account:
-    account_number: LU948293847293847283
-    name: Tech Solutions Client
-  amount: 12800.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment received for tech services
-  location: Lustrien
-  status: completed
-  time: '13:54:22'
-  transaction_id: TXN33910346
-  type: credit
-- account:
-    account_number: LU382938473827394847
-    name: Lustrien Catering Co.
-  amount: 6590.25
-  currency: EUR
-  date: '2024-11-02'
-  description: Catering services for business event
-  location: Lustrien
-  status: completed
-  time: '14:12:45'
-  transaction_id: TXN33910347
-  type: debit
-- account:
-    account_number: LU193847283847293847
-    name: Event Hosting Client A
-  amount: 14560.9
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment for hosting corporate event
-  location: Lustrien
-  status: completed
-  time: '14:38:30'
-  transaction_id: TXN33910348
-  type: credit
-- account:
-    account_number: LU948293847293847293
-    name: Stationery World
-  amount: 3500.75
-  currency: EUR
-  date: '2024-11-02'
-  description: Purchase of office supplies
-  location: Lustrien
-  status: completed
-  time: '15:10:54'
-  transaction_id: TXN33910349
-  type: debit
-- account:
-    account_number: LU183948293847293847
-    name: IT Hardware Solutions
-  amount: 7294.15
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment for new office hardware
-  location: Lustrien
-  status: completed
-  time: '15:35:18'
-  transaction_id: TXN33910350
-  type: debit
-- account:
-    account_number: LU102938473827394847
-    name: Consultancy Client B
-  amount: 19500.0
-  currency: EUR
-  date: '2024-11-02'
-  description: Consulting fees received
-  location: Lustrien
-  status: completed
-  time: '16:05:32'
-  transaction_id: TXN33910351
-  type: credit
-- account:
-    account_number: LU847293847283928472
-    name: Lustrien Marketing Solutions
-  amount: 8600.6
-  currency: EUR
-  date: '2024-11-02'
-  description: Advertising and marketing campaign costs
-  location: Lustrien
-  status: completed
-  time: '16:45:47'
-  transaction_id: TXN33910352
-  type: debit
-- account:
-    account_number: LU102394839283748293
-    name: Office Maintenance Services
-  amount: 4892.45
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment for office cleaning and maintenance
-  location: Lustrien
-  status: completed
-  time: '17:12:25'
-  transaction_id: TXN33910353
-  type: debit
-- account:
-    account_number: LU284738492384729384
-    name: Business Client D
-  amount: 15750.3
-  currency: EUR
-  date: '2024-11-02'
-  description: Payment received for software consulting services
-  location: Lustrien
-  status: completed
-  time: '17:43:50'
-  transaction_id: TXN33910354
-  type: credit
-- account:
     account_number: LU394820394820394820
     name: Office Furniture Depot
   amount: 4390.75
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Office furniture purchase
   location: Lustrien
   status: completed
@@ -316,7 +16,7 @@ transactions:
     name: Catering Services Ltd.
   amount: 6700.9
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Corporate catering services
   location: Lustrien
   status: completed
@@ -328,7 +28,7 @@ transactions:
     name: Client E Refund
   amount: 8950.5
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Refund for overpayment
   location: Lustrien
   status: completed
@@ -340,7 +40,7 @@ transactions:
     name: Local Printing Services
   amount: 1280.25
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Printing services
   location: Lustrien
   status: not authorized
@@ -352,7 +52,7 @@ transactions:
     name: Real Estate Holdings
   amount: 62350.0
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Property acquisition payment
   location: Lustrien
   status: completed
@@ -364,7 +64,7 @@ transactions:
     name: IT Services Ltd.
   amount: 9435.35
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: IT infrastructure services for office
   location: Lustrien
   status: completed
@@ -376,7 +76,7 @@ transactions:
     name: Client X
   amount: 7123.4
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Payment received for business consulting services
   location: Lustrien
   status: completed
@@ -388,7 +88,7 @@ transactions:
     name: Business Supplies Ltd.
   amount: 5020.75
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Purchase of office supplies
   location: Lustrien
   status: completed
@@ -400,7 +100,7 @@ transactions:
     name: Lustrien Marketing Agency
   amount: 3845.6
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Advertising campaign costs
   location: Lustrien
   status: completed
@@ -412,7 +112,7 @@ transactions:
     name: Corporate Client Y
   amount: 17985.25
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Consulting services fees
   location: Lustrien
   status: completed
@@ -424,7 +124,7 @@ transactions:
     name: Lustrien Legal Services
   amount: 11835.5
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Payment for legal consultation
   location: Lustrien
   status: completed
@@ -436,7 +136,7 @@ transactions:
     name: "Caf\xE9 Suppliers Ltd."
   amount: 2305.1
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Office coffee supplies
   location: Lustrien
   status: completed
@@ -448,7 +148,7 @@ transactions:
     name: Client Z
   amount: 15920.9
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Payment received for financial services
   location: Lustrien
   status: completed
@@ -460,7 +160,7 @@ transactions:
     name: Stationery Supplies
   amount: 4350.75
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Office supplies for Q4
   location: Lustrien
   status: completed
@@ -472,7 +172,7 @@ transactions:
     name: International Client M
   amount: 12590.25
   currency: EUR
-  date: '2023-11-03'
+  date: '2024-11-03'
   description: Payment received for international consulting services
   location: Lustrien
   status: completed
@@ -769,78 +469,100 @@ transactions:
   type: debit
 - account_name: ''
   account_number: ''
-  amount: 22
+  amount: 11
   currency: EUR
-  date: '2024-10-22'
+  date: '2024-10-23'
   description: ''
   location: ''
   status: Completed
-  time: '21:37:32'
-  transaction_id: TXN99407235
+  time: '10:13:30'
+  transaction_id: TXN68568898
   type: debit
 - account_name: ''
   account_number: ''
-  amount: 111
+  amount: 11
   currency: EUR
-  date: '2024-10-22'
+  date: '2024-10-23'
   description: ''
   location: ''
   status: Not Authorized
-  time: '21:38:41'
-  transaction_id: TXN73710297
+  time: '10:14:12'
+  transaction_id: TXN97554845
   type: debit
 - account_name: ''
   account_number: ''
-  amount: 111
+  amount: 11
   currency: EUR
-  date: '2024-10-22'
+  date: '2024-10-23'
   description: ''
   location: ''
   status: Completed
-  time: '21:39:13'
-  transaction_id: TXN61346434
+  time: '10:14:16'
+  transaction_id: TXN89432194
   type: debit
 - account_name: ''
   account_number: ''
   amount: 1
   currency: EUR
-  date: '2024-10-22'
+  date: '2024-10-23'
   description: ''
   location: ''
   status: Completed
-  time: '21:42:41'
-  transaction_id: TXN75522180
+  time: '10:18:01'
+  transaction_id: TXN60258362
+  type: debit
+- account_name: ''
+  account_number: ''
+  amount: 11
+  currency: EUR
+  date: '2024-10-23'
+  description: ''
+  location: ''
+  status: Completed
+  time: '10:20:21'
+  transaction_id: TXN76463563
+  type: debit
+- account_name: ''
+  account_number: ''
+  amount: 11
+  currency: EUR
+  date: '2024-10-23'
+  description: ''
+  location: ''
+  status: Completed
+  time: '10:22:22'
+  transaction_id: TXN44488926
+  type: debit
+- account_name: ''
+  account_number: ''
+  amount: 11
+  currency: EUR
+  date: '2024-10-23'
+  description: ''
+  location: ''
+  status: Completed
+  time: '10:29:45'
+  transaction_id: TXN11973229
+  type: debit
+- account_name: ''
+  account_number: ''
+  amount: 11
+  currency: EUR
+  date: '2024-10-23'
+  description: ''
+  location: ''
+  status: Completed
+  time: '10:32:06'
+  transaction_id: TXN91912166
   type: debit
 - account_name: ''
   account_number: ''
   amount: 1
   currency: EUR
-  date: '2024-10-22'
+  date: '2024-10-23'
   description: ''
   location: ''
-  status: Not Authorized
-  time: '21:42:58'
-  transaction_id: TXN50417296
-  type: debit
-- account_name: Default Account Name
-  account_number: Default IBAN
-  amount: 1111111
-  currency: EUR
-  date: '2024-10-22'
-  description: Payment description
-  location: Unknown Location
-  status: Not Authorized
-  time: '21:47:14'
-  transaction_id: TXN95627077
-  type: credit
-- account_name: Default Account Name
-  account_number: Default IBAN
-  amount: 1111111
-  currency: EUR
-  date: '2024-10-22'
-  description: Payment description
-  location: Unknown Location
   status: Completed
-  time: '21:47:27'
-  transaction_id: TXN85879629
-  type: credit
+  time: '10:35:59'
+  transaction_id: TXN52787797
+  type: debit
