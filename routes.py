@@ -1,8 +1,10 @@
-from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
+from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for, current_app  # Add current_app import
 from backend.database import User, Transaction, db, load_transactions_from_yaml, save_transactions_to_yaml, add_transaction_to_history  # Add the function import
 from datetime import datetime
 import random
 from flask_mail import Message
+import logging
+
 
 
 # Create a blueprint for the routes
@@ -25,6 +27,11 @@ def login():
 
     # Query the database for the user
     user = User.query.filter_by(username=username).first()
+
+    if user:
+        print(f"User found: {user.username}, Password in DB: {user.password}, Provided Password: {password}")
+    else:
+        print(f"No user found for username: {username}")
 
     if user and user.password == password:
         # Store the user's username in session and trigger MFA request
@@ -69,84 +76,120 @@ def payment():
     # If the user is logged in, render the payment.html template
     return render_template('payment-page.html')
 
+
+@api.route('/verify-dual-mfa', methods=['POST'])
+def verify_dual_mfa():
+    data = request.json
+    mfa_token = data.get('mfaToken')
+    second_email = data.get('secondEmail')  # Use second email (from "second username" field)
+    amount = data.get('amount')
+
+    if 'username' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    username = session['username']
+    user = User.query.filter_by(username=username).first()
+
+    if not user or str(user.mfa) != str(mfa_token):
+        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
+
+    # If the MFA is valid, send an email to the second user
+    try:
+        logging.info("Trying to send email...")
+        mail = current_app.extensions.get('mail')
+
+        # Create the message
+        msg = Message(
+            subject="Transaction Approval Needed",
+            recipients=[second_email],
+            body=f"Hello,\n\nPlease approve the transaction for {amount} EUR.\n\nThanks!",
+            sender=current_app.config['MAIL_DEFAULT_SENDER']
+        )
+
+        # Send the email
+        mail.send(msg)
+
+        logging.info(f"Email successfully sent to {second_email}.")  # Log success
+        return jsonify({"success": True, "message": f"Email sent to {second_email} for approval"}), 200
+    except Exception as e:
+        logging.error(f"Failed to send email. Error: {str(e)}")  # Log the error message
+        return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
+
+
+# Verify payment and handle MFA
 @api.route('/verify-payment-mfa', methods=['POST'])
 def verify_payment_mfa():
     data = request.json
     amount = data.get('amount')
     mfa_token = data.get('mfaToken')
-    second_username = data.get('secondUsername')  # Second username for dual MFA
-    second_mfa_token = data.get('secondMfaToken')
+    second_email = data.get('secondEmail', None)  # Second email for dual MFA only
 
-    # Transaction data from the form, ensure all fields are provided
     transaction_data = {
         'amount': amount,
-        'currency': data.get('currency', 'EUR'),  # Default to 'EUR' if not provided
-        'type': data.get('type', 'credit'),  # Default type to 'credit' if not provided
-        'account_name': data.get('accountName', 'Default Account Name'),  # Use a default if not provided
-        'account_number': data.get('iban', 'Default IBAN'),  # Use a default IBAN if not provided
-        'description': data.get('description', 'Payment description'),  # Default description if not provided
-        'location': data.get('location', 'Unknown Location'),  # Default location if not provided
+        'currency': data.get('currency', 'EUR'),
+        'type': data.get('type', 'debit'),
+        'account_name': data.get('accountName', 'Default Account Name'),
+        'account_number': data.get('iban', 'Default IBAN'),
+        'description': data.get('description', 'Payment description'),
+        'location': data.get('location', 'Unknown Location'),
         'date': datetime.now().strftime("%Y-%m-%d"),
         'time': datetime.now().strftime("%H:%M:%S"),
     }
 
-    # Ensure user is logged in
+    # Check if the user is logged in
     if 'username' not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    # Fetch the logged-in user from the session
     username = session['username']
     user = User.query.filter_by(username=username).first()
 
-    # Verify the logged-in user's MFA token
     if not user or str(user.mfa) != str(mfa_token):
-        # If MFA fails, mark transaction as "Not Authorized" and add to history
         transaction_data['status'] = "Not Authorized"
         add_transaction_to_history(transaction_data)
         return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
 
-    # If the amount is 50,000 or more, verify the second MFA token for dual authentication
-    if amount >= 50000:
-        second_user = User.query.filter_by(username=second_username).first()
+    # If amount is greater than or equal to 50,000, initiate dual MFA verification
+    if float(amount) >= 50000:
+        # Ensure second email is provided for dual MFA
+        if not second_email:
+            return jsonify({"error": "Second email required for dual verification"}), 400
 
-        if not second_user or str(second_user.mfa) != str(second_mfa_token):
-            # If second MFA fails, mark transaction as "Not Authorized" and add to history
-            transaction_data['status'] = "Not Authorized"
-            add_transaction_to_history(transaction_data)
-            return jsonify({"error": "Invalid second MFA token or user"}), 401
+        try:
+            # Send email to second approver for dual verification
+            mail = current_app.extensions.get('mail')
+            msg = Message(
+                subject="Transaction Approval Required",
+                recipients=[second_email],  # Send to second email
+                body=f"Hello,\n\nYou need to approve a transaction of {amount} EUR. Please confirm your approval.\n\nThanks!",
+                sender=current_app.config['MAIL_DEFAULT_SENDER']  # Sender is defined in app.py
+            )
+            mail.send(msg)
 
-        # Both MFA tokens are verified, mark transaction as "Completed"
+            return jsonify({"success": True, "message": f"Email sent to {second_email} for approval"}), 200
+
+        except Exception as e:
+            return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
+
+    else:
+        # Single MFA verification successful
         transaction_data['status'] = "Completed"
         add_transaction_to_history(transaction_data)
-        return jsonify({"success": True, "message": "Payment authorized with double MFA"}), 200
+        return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
-    # For payments under 50,000, only the logged-in user's MFA is required
-    transaction_data['status'] = "Completed"
-    add_transaction_to_history(transaction_data)
 
-    return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
 
 # Transaction history route
 @api.route('/transaction-history', methods=['GET'])
 def transaction_history():
-    # Check if the user is logged in
     if 'username' not in session:
         return redirect(url_for('api.index'))
-
-    # Get the current page number from query parameters (default to 1)
     page = request.args.get('page', 1, type=int)
-
-    # Query the transactions ordered by date descending
     transactions_query = Transaction.query.order_by(Transaction.date.desc(), Transaction.time.desc())
-
-    # Pagination: 12 transactions per page, no error out
     transactions_paginated = transactions_query.paginate(page=page, per_page=12, error_out=False)
-
-    # Get the transactions for the current page
     transactions = transactions_paginated.items
-
     return render_template('transaction-history.html', transactions=transactions, page=page)
+
 
 
 @api.route('/payment-successful', methods=['GET'])

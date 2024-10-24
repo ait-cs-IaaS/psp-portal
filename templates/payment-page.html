@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Portal</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        /* General styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -14,6 +12,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            text-align: center;
         }
 
         form {
@@ -46,13 +45,20 @@
             background-color: #005fa3;
         }
 
-        #mfa-container, #dual-mfa-container {
+        #mfa-container, #dual-mfa-container, #second-username-container {
             display: none;
             margin-top: 20px;
         }
 
         #payment-message, #mfa-message {
             color: red;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            width: 50%;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -87,51 +93,34 @@
 
     <!-- Dual MFA Fields -->
     <div id="dual-mfa-container">
-        <h3>Enter Two MFA Tokens for Approval</h3>
-        <input type="number" id="mfa-token1" placeholder="Enter MFA Token 1" required>
-        <input type="number" id="mfa-token2" placeholder="Enter MFA Token 2" required>
-        <button type="button" onclick="verifyDualMFA()">Verify MFA Tokens</button>
+        <h3>Enter First MFA Token and Second Employee's Email</h3>
+        <input type="number" id="mfa-token1" placeholder="Enter Your MFA Token" required>
+        <input type="email" id="second-username" placeholder="Second Employee Email" required>
+        <button type="button" onclick="verifyDualMFA()">Submit for Approval</button> <!-- Make sure the onclick is set correctly -->
     </div>
+
 
     <p id="payment-message"></p>
     <p id="mfa-message"></p>
 
-    <!-- Logout Button -->
-    <button id="logout-button" onclick="logout()">Logout</button>
+    <div class="button-container">
+        <button id="logout-button" onclick="logout()">Logout</button>
+    </div>
 
     <script>
         // Reset MFA attempts when the payment page is loaded
         window.onload = function() {
             loadPaymentPage();
         };
-    
+
         // Function to show the payment form when "Send Payment" button is clicked
         function showPaymentForm() {
             document.getElementById('payment-form').style.display = 'block'; // Show the payment form
         }
 
-        // Function to process the payment and show MFA fields based on the payment sum
-        function processPayment() {
-            const sum = parseFloat(document.getElementById('sum').value);
-            const paymentMessage = document.getElementById('payment-message');
-            if (isNaN(sum) || sum <= 0) {
-                paymentMessage.textContent = 'Please enter a valid payment amount.';
-                return;
-            }
-            paymentMessage.textContent = ''; // Clear any previous messages
 
-            // If payment sum is less than 50,000, show single MFA field
-            if (sum < 50000) {
-                document.getElementById('mfa-container').style.display = 'block';
-                document.getElementById('dual-mfa-container').style.display = 'none';
-            } else {
-                // Show dual MFA fields if payment sum is 50,000 or more
-                document.getElementById('dual-mfa-container').style.display = 'block';
-                document.getElementById('mfa-container').style.display = 'none';
-            }
-        }
     </script>
-    
+
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->
 </body>
 </html>
