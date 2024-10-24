@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for, current_app  # Add current_app import
-from backend.database import User, Transaction, db, load_transactions_from_yaml, save_transactions_to_yaml, add_transaction_to_history  # Add the function import
+from backend.database import User, Transaction, db, generate_next_transaction_id, load_transactions_from_yaml, save_transactions_to_yaml, add_transaction_to_history  # Add the function import
 from datetime import datetime
+import threading
+import time
 import random
 from flask_mail import Message
 import logging
@@ -77,12 +79,30 @@ def payment():
     return render_template('payment-page.html')
 
 
+def auto_expire_transaction(app, transaction_id):
+    with app.app_context():  # Use the Flask app context in the thread
+        time.sleep(120)  # Wait for 2 minutes
+        transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
+        if transaction and transaction.status == 'Pending Approval':
+            transaction.status = 'Not Authorized'
+            db.session.commit()
+            logging.info(f"Transaction {transaction_id} automatically marked as Not Authorized.")
+
+
+from flask import current_app
+
 @api.route('/verify-dual-mfa', methods=['POST'])
 def verify_dual_mfa():
     data = request.json
     mfa_token = data.get('mfaToken')
-    second_username = data.get('secondUsername')  # Use second username (instead of email)
+    second_username = data.get('secondUsername')  # Second employee username
     amount = data.get('amount')
+    iban = data.get('iban')
+    account_name = data.get('accountName')
+    currency = data.get('currency')
+    transaction_type = data.get('type')
+    description = data.get('description')
+    location = data.get('location')
 
     # Ensure the user is logged in
     if 'username' not in session:
@@ -93,7 +113,7 @@ def verify_dual_mfa():
 
     # Verify that the MFA token for the logged-in user is correct
     if not user or str(user.mfa) != str(mfa_token):
-        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
+        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 400
 
     # Ensure that the second username corresponds to a valid user other than the logged-in user
     second_user = User.query.filter_by(username=second_username).first()
@@ -104,7 +124,36 @@ def verify_dual_mfa():
     if second_user.username == username:
         return jsonify({"error": "The second user cannot be the same as the logged-in user"}), 400
 
-    # If everything is valid, send an email to the second user for approval
+    # Generate the transaction ID (TXN...)
+    transaction_id = generate_next_transaction_id()
+
+    # Save transaction data to the database (pending approval)
+    transaction_data = {
+        'transaction_id': transaction_id,
+        'date': datetime.now().strftime("%Y-%m-%d"),
+        'time': datetime.now().strftime("%H:%M:%S"),
+        'amount': amount,
+        'currency': currency,
+        'type': transaction_type,
+        'status': 'Pending Approval',
+        'account_name': account_name,
+        'account_number': iban,
+        'description': description,
+        'location': location
+    }
+
+    # Add the transaction to history, mark it as pending approval
+    add_transaction_to_history(transaction_data)
+
+    # Start a background thread to auto-expire the transaction in 2 minutes
+    app = current_app._get_current_object()  # Explicitly get current app for the thread
+    expire_thread = threading.Thread(target=auto_expire_transaction, args=(app, transaction_id,))
+    expire_thread.start()
+
+    # Generate the approval link for the second user
+    approval_link = url_for('api.confirm_dual_mfa', transaction_id=transaction_id, _external=True)
+
+    # Send an email to the second user with the transaction ID and approval link
     try:
         logging.info("Trying to send email...")
         mail = current_app.extensions.get('mail')
@@ -113,7 +162,7 @@ def verify_dual_mfa():
         msg = Message(
             subject="Transaction Approval Needed",
             recipients=[second_user.email],  # Use the second user's email for sending
-            body=f"Hello {second_user.username},\n\nPlease approve the transaction for {amount} EUR.\n\nThanks!",
+            body=f"Hello {second_user.username},\n\nYou need to approve the transaction {transaction_id} for {currency} {amount} .\n\nPlease click the following link to view the transaction details and approve it:\n\n{approval_link}\n\nThanks!",
             sender=current_app.config['MAIL_DEFAULT_SENDER']
         )
 
@@ -121,9 +170,45 @@ def verify_dual_mfa():
         mail.send(msg)
 
         logging.info(f"Email successfully sent to {second_user.email}.")  # Log success
-        return jsonify({"success": True, "message": f"Email sent to {second_user.username} for approval"}), 200
+        return jsonify({"success": True, "message": f"Email sent to {second_user.username} for approval", "transaction_id": transaction_id}), 200
     except Exception as e:
-        logging.error(f"Failed to send email. Error: {str(e)}")  #
+        logging.error(f"Failed to send email. Error: {str(e)}")  # Log the error message
+        return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
+
+
+
+@api.route('/confirm-dual-mfa/<transaction_id>', methods=['GET', 'POST'])
+def confirm_dual_mfa(transaction_id):
+    # Retrieve the transaction from the database
+    transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
+
+    if not transaction:
+        return "Transaction not found", 404
+
+    if request.method == 'GET':
+        # Render a template showing the transaction details and a form for entering the MFA token
+        return render_template('confirm-dual-mfa.html', transaction=transaction)
+    
+    if request.method == 'POST':
+        # Get the second user's MFA token from the form
+        second_mfa_token = request.form.get('mfaToken')
+
+        # Ensure the second user is logged in
+        if 'username' not in session:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        # Find the second user by their session username
+        second_user = User.query.filter_by(username=session['username']).first()
+
+        if not second_user or str(second_user.mfa) != str(second_mfa_token):
+            return jsonify({"error": "Invalid MFA token for the second user"}), 400
+
+        # If the MFA token is valid, approve the transaction
+        transaction.status = 'Completed'
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Transaction approved successfully!"})
+
 
 
 # Verify payment and handle MFA

@@ -45,7 +45,7 @@
             background-color: #005fa3;
         }
 
-        #mfa-container, #dual-mfa-container, #second-username-container {
+        #mfa-container, #dual-mfa-container {
             display: none;
             margin-top: 20px;
         }
@@ -70,33 +70,36 @@
 
     <!-- Payment Form -->
     <form id="payment-form">
-        <input type="text" id="iban" placeholder="IBAN" required>
-        <input type="text" id="name" placeholder="Account Name" required>
-        <input type="date" id="execution-date" required>
-        <input type="number" id="sum" placeholder="Sum (EUR)" required>
-        <input type="text" id="currency" placeholder="Currency" value="EUR" required> <!-- Currency -->
-        <select id="transaction-type" required>
+        <input type="text" id="iban" name="iban" placeholder="IBAN" required>
+        <input type="text" id="name" name="account_name" placeholder="Account Name" required>
+        <input type="text" id="execution-date" name="execution_date" readonly> <!-- Prefilled with current date -->
+        <input type="number" id="sum" name="amount" placeholder="Amount" required>
+        <input type="text" id="currency" name="currency" value="EUR" readonly> <!-- Prefilled with EUR, readonly -->
+        <select id="transaction-type" name="type" required>
+            <option value="">Select Transaction Type</option>
             <option value="debit">Debit</option>
             <option value="credit">Credit</option>
-        </select> <!-- Type of transaction (Debit/Credit) -->
-        <input type="text" id="description" placeholder="Description" required> <!-- Description -->
-        <input type="text" id="location" placeholder="Location" required> <!-- Location -->
+        </select>
+        <input type="text" id="description" name="description" placeholder="Description" required>
+        <input type="text" id="location" name="location" placeholder="Location" required>
+        <p id="error-message" style="color: red; display: none;">All fields are required. Please fill them in.</p>
         <button type="button" onclick="processPayment()">Submit Payment</button>
     </form>
 
+    <!-- Single MFA Container -->
     <div id="mfa-container">
         <h3>Enter MFA Token</h3>
         <input type="number" id="mfa-token" placeholder="Enter MFA Token" required>
         <button type="button" onclick="verifySingleMFA()">Verify MFA Token</button>
     </div>
 
+    <!-- Dual MFA Container -->
     <div id="dual-mfa-container">
         <h3>Enter Your MFA Token and Second Employee's Username</h3>
         <input type="number" id="mfa-token1" placeholder="Enter Your MFA Token" required>
         <input type="text" id="second-username" placeholder="Second Employee Username" required>
         <button type="button" onclick="verifyDualMFA()">Submit for Approval</button>
     </div>
-
 
     <p id="payment-message"></p>
     <p id="mfa-message"></p>
@@ -105,18 +108,49 @@
         <button id="logout-button" onclick="logout()">Logout</button>
     </div>
 
+    <!-- JavaScript -->
     <script>
-        // Reset MFA attempts when the payment page is loaded
-        window.onload = function() {
-            loadPaymentPage();
-        };
+        // Prefill the execution date with the current date and disable changes
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const currentDate = new Date().toISOString().split('T')[0];  // Get current date in YYYY-MM-DD format
+            document.getElementById('execution-date').value = currentDate;
+        });
 
         // Function to show the payment form when "Send Payment" button is clicked
         function showPaymentForm() {
             document.getElementById('payment-form').style.display = 'block'; // Show the payment form
         }
 
+        // Function to process the payment and show MFA fields based on the payment sum
+        function processPayment() {
+            const sum = parseFloat(document.getElementById('sum').value);
+            const paymentMessage = document.getElementById('payment-message');
 
+            // Validate form fields
+            const iban = document.getElementById('iban').value.trim();
+            const accountName = document.getElementById('name').value.trim();
+            const currency = document.getElementById('currency').value.trim();
+            const type = document.getElementById('transaction-type').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const errorMessage = document.getElementById('error-message');
+
+            if (!iban || !accountName || isNaN(sum) || sum <= 0 || !currency || !type || !description || !location) {
+                errorMessage.style.display = 'block'; // Show error message
+                return;
+            } else {
+                errorMessage.style.display = 'none'; // Hide error message
+            }
+
+            // Show appropriate MFA form based on the amount
+            if (sum < 50000) {
+                document.getElementById('mfa-container').style.display = 'block'; // Show single MFA
+                document.getElementById('dual-mfa-container').style.display = 'none'; // Hide dual MFA
+            } else {
+                document.getElementById('dual-mfa-container').style.display = 'block'; // Show dual MFA
+                document.getElementById('mfa-container').style.display = 'none'; // Hide single MFA
+            }
+        }
     </script>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->

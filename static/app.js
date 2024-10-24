@@ -3,6 +3,9 @@ let mfaAttemptsPayment = sessionStorage.getItem('mfaAttemptsPayment') ? parseInt
 const maxAttemptsPayment = 1; // Maximum allowed payment-related attempts
 const maxAttemptsLogin = 3;   // Maximum allowed login-related attempts
 
+
+
+
 // Handle login and trigger MFA if required
 function login() {
     const username = document.getElementById('username').value;
@@ -87,15 +90,16 @@ function verifyMFA() {
     });
 }
 
-// Verify single MFA token for payments less than 50,000
+// Function to handle single MFA verification
 function verifySingleMFA() {
     const mfaToken = document.getElementById('mfa-token').value;
     const amount = parseFloat(document.getElementById('sum').value);
     const mfaMessage = document.getElementById('mfa-message');
 
-    // Reset MFA attempt counter before every new submission
-    mfaAttemptsPayment = 0;
-    sessionStorage.setItem('mfaAttemptsPayment', mfaAttemptsPayment);
+    if (!mfaToken) {
+        mfaMessage.textContent = "Please enter your MFA token.";
+        return;
+    }
 
     // Send request to backend to verify single MFA token
     fetch('/verify-payment-mfa', {
@@ -105,7 +109,7 @@ function verifySingleMFA() {
             amount: amount,
             mfaToken: mfaToken,
             currency: "EUR",
-            type: "debit",
+            type: document.getElementById('transaction-type').value,
             accountName: document.getElementById('name').value,
             iban: document.getElementById('iban').value,
             description: document.getElementById('description').value,
@@ -133,77 +137,88 @@ function verifySingleMFA() {
     });
 }
 
+// Function to handle dual MFA verification
 function verifyDualMFA() {
-    const mfaToken1Element = document.getElementById('mfa-token1');
-    const secondUsernameElement = document.getElementById('second-username');
-
-    if (!mfaToken1Element || !secondUsernameElement) {
-        console.error('MFA token or second username field is missing. Ensure the dual MFA fields are displayed.');
-        document.getElementById('mfa-message').textContent = 'MFA token and second username fields are missing.';
-        return;
-    }
-
-    const mfaToken1 = mfaToken1Element.value;
-    const secondUsername = secondUsernameElement.value;
+    const mfaToken1 = document.getElementById('mfa-token1').value;
+    const secondUsername = document.getElementById('second-username').value;
     const amount = parseFloat(document.getElementById('sum').value);
+    const iban = document.getElementById('iban').value.trim();
+    const accountName = document.getElementById('name').value.trim();
+    const currency = document.getElementById('currency').value.trim();
+    const type = document.getElementById('transaction-type').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const mfaMessage = document.getElementById('mfa-message');
 
     if (!mfaToken1 || !secondUsername) {
-        document.getElementById('mfa-message').textContent = 'All fields must be filled out for dual MFA.';
+        mfaMessage.textContent = 'MFA token and second employee username are required.';
         return;
     }
 
-    // Send request to backend for dual MFA verification
+    // Send the form data to the backend for dual MFA processing
     fetch('/verify-dual-mfa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             amount: amount,
             mfaToken: mfaToken1,
-            secondUsername: secondUsername  // Second username for dual verification
+            secondUsername: secondUsername,
+            iban: iban,
+            accountName: accountName,
+            currency: currency,
+            type: type,
+            description: description,
+            location: location
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            document.getElementById('mfa-message').textContent = 'Email sent for approval!';
+            mfaMessage.textContent = 'Email sent for approval!';
         } else {
-            document.getElementById('mfa-message').textContent = data.error || 'Invalid MFA token or second username. Payment not authorized.';
+            mfaMessage.textContent = data.error || 'Transaction not authorized.';
             setTimeout(() => {
                 window.location.href = '/payment-unsuccessful';
             }, 1000);
         }
     })
     .catch(error => {
-        document.getElementById('mfa-message').textContent = 'An error occurred. Please try again.';
+        mfaMessage.textContent = 'An error occurred during MFA verification. Please try again.';
         console.error('Error during dual MFA verification:', error);
     });
 }
 
 
 
-
-
-
-// Function to process the payment and show MFA fields based on the payment sum
+/// Function to process the payment and show MFA fields based on the payment sum
 function processPayment() {
+    const iban = document.getElementById('iban').value.trim();
+    const accountName = document.getElementById('name').value.trim();
     const sum = parseFloat(document.getElementById('sum').value);
-    const paymentMessage = document.getElementById('payment-message');
-    if (isNaN(sum) || sum <= 0) {
-        paymentMessage.textContent = 'Please enter a valid payment amount.';
-        return;
-    }
-    paymentMessage.textContent = ''; // Clear any previous messages
+    const currency = document.getElementById('currency').value.trim();
+    const type = document.getElementById('transaction-type').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const errorMessage = document.getElementById('error-message');
 
-    // If payment sum is less than 50,000, show single MFA field
-    if (sum < 50000) {
-        document.getElementById('mfa-container').style.display = 'block';
-        document.getElementById('dual-mfa-container').style.display = 'none';
+    // Validate the form inputs
+    if (!iban || !accountName || isNaN(sum) || sum <= 0 || !currency || !type || !description || !location) {
+        errorMessage.style.display = 'block'; // Show error message
+        return;
     } else {
-        // Show dual MFA fields if payment sum is 50,000 or more
-        document.getElementById('dual-mfa-container').style.display = 'block';
-        document.getElementById('mfa-container').style.display = 'none';
+        errorMessage.style.display = 'none'; // Hide error message
+    }
+
+    // Show appropriate MFA form based on the amount
+    if (sum < 50000) {
+        document.getElementById('mfa-container').style.display = 'block'; // Show single MFA
+        document.getElementById('dual-mfa-container').style.display = 'none'; // Hide dual MFA
+    } else {
+        document.getElementById('dual-mfa-container').style.display = 'block'; // Show dual MFA
+        document.getElementById('mfa-container').style.display = 'none'; // Hide single MFA
     }
 }
+
 
 // Handle user logout
 function logout() {
@@ -217,3 +232,22 @@ function logout() {
         window.location.href = '/'; // Redirect to home page
     });
 }
+
+
+
+// Handle MFA token verification on transaction approval page
+document.addEventListener("DOMContentLoaded", function () {
+    const mfaForm = document.querySelector("form"); // Assuming the MFA form exists on the transaction approval page
+
+    if (mfaForm) {  // Only apply this logic on the transaction approval page
+        mfaForm.addEventListener("submit", function (event) {
+            const mfaTokenInput = document.querySelector("input[name='mfaToken']");
+
+            // Ensure the MFA token is entered and is a number
+            if (!mfaTokenInput.value || isNaN(mfaTokenInput.value)) {
+                event.preventDefault(); // Prevent form submission
+                alert("Please enter a valid MFA token.");
+            }
+        });
+    }
+});

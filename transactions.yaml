@@ -839,3 +839,111 @@ transactions:
   time: '18:52:55'
   transaction_id: TXN33910424
   type: debit
+- account:
+    account_number: IBAN12345678
+    name: admin
+  amount: 111111111
+  currency: EUR
+  date: '2024-10-24'
+  description: Pending transaction for dual approval
+  location: Online
+  status: Pending Approval
+  time: '19:06:54'
+  transaction_id: TXN33910425
+  type: debit
+- account:
+    account_number: ddd
+    name: ddd
+  amount: 11111
+  currency: EUR
+  date: '2024-10-24'
+  description: www
+  location: www
+  status: Completed
+  time: '19:59:24'
+  transaction_id: TXN33910426
+  type: debit
+- account:
+    account_number: rr
+    name: rrr
+  amount: 1
+  currency: EUR
+  date: '2024-10-24'
+  description: ee
+  location: er
+  status: Completed
+  time: '20:07:35'
+  transaction_id: TXN33910427
+  type: credit
+- account:
+    account_number: '222'
+    name: '2222'
+  amount: 11111111
+  currency: EUR
+  date: '2024-10-24'
+  description: 1ew
+  location: ee
+  status: Pending Approval
+  time: '20:07:51'
+  transaction_id: TXN33910428
+  type: credit
+- account:
+    account_number: wedwef
+    name: fqefq
+  amount: 12222222
+  currency: EUR
+  date: '2024-10-24'
+  description: w
+  location: e
+  status: Pending Approval
+  time: '20:20:52'
+  transaction_id: TXN33910429
+  type: debit
+- account:
+    account_number: e
+    name: eeeee
+  amount: 111111111
+  currency: EUR
+  date: '2024-10-24'
+  description: eeee
+  location: eee
+  status: Pending Approval
+  time: '20:24:22'
+  transaction_id: TXN33910430
+  type: debit
+- account:
+    account_number: '2'
+    name: '33'
+  amount: 11111111
+  currency: EUR
+  date: '2024-10-24'
+  description: '22'
+  location: '2222'
+  status: Pending Approval
+  time: '20:26:38'
+  transaction_id: TXN33910431
+  type: debit
+- account:
+    account_number: rrr
+    name: rr
+  amount: 11111111
+  currency: EUR
+  date: '2024-10-24'
+  description: '111'
+  location: '111'
+  status: Pending Approval
+  time: '20:30:24'
+  transaction_id: TXN33910432
+  type: debit
+- account:
+    account_number: rrr
+    name: rr
+  amount: 11111111
+  currency: EUR
+  date: '2024-10-24'
+  description: '111'
+  location: '111'
+  status: Pending Approval
+  time: '20:30:25'
+  transaction_id: TXN33910433
+  type: debit
