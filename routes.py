@@ -81,19 +81,30 @@ def payment():
 def verify_dual_mfa():
     data = request.json
     mfa_token = data.get('mfaToken')
-    second_email = data.get('secondEmail')  # Use second email (from "second username" field)
+    second_username = data.get('secondUsername')  # Use second username (instead of email)
     amount = data.get('amount')
 
+    # Ensure the user is logged in
     if 'username' not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
     username = session['username']
     user = User.query.filter_by(username=username).first()
 
+    # Verify that the MFA token for the logged-in user is correct
     if not user or str(user.mfa) != str(mfa_token):
         return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
 
-    # If the MFA is valid, send an email to the second user
+    # Ensure that the second username corresponds to a valid user other than the logged-in user
+    second_user = User.query.filter_by(username=second_username).first()
+
+    if not second_user:
+        return jsonify({"error": "The second user with the provided username does not exist"}), 404
+    
+    if second_user.username == username:
+        return jsonify({"error": "The second user cannot be the same as the logged-in user"}), 400
+
+    # If everything is valid, send an email to the second user for approval
     try:
         logging.info("Trying to send email...")
         mail = current_app.extensions.get('mail')
@@ -101,19 +112,18 @@ def verify_dual_mfa():
         # Create the message
         msg = Message(
             subject="Transaction Approval Needed",
-            recipients=[second_email],
-            body=f"Hello,\n\nPlease approve the transaction for {amount} EUR.\n\nThanks!",
+            recipients=[second_user.email],  # Use the second user's email for sending
+            body=f"Hello {second_user.username},\n\nPlease approve the transaction for {amount} EUR.\n\nThanks!",
             sender=current_app.config['MAIL_DEFAULT_SENDER']
         )
 
         # Send the email
         mail.send(msg)
 
-        logging.info(f"Email successfully sent to {second_email}.")  # Log success
-        return jsonify({"success": True, "message": f"Email sent to {second_email} for approval"}), 200
+        logging.info(f"Email successfully sent to {second_user.email}.")  # Log success
+        return jsonify({"success": True, "message": f"Email sent to {second_user.username} for approval"}), 200
     except Exception as e:
-        logging.error(f"Failed to send email. Error: {str(e)}")  # Log the error message
-        return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
+        logging.error(f"Failed to send email. Error: {str(e)}")  #
 
 
 # Verify payment and handle MFA

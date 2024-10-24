@@ -84,19 +84,17 @@
         <button type="button" onclick="processPayment()">Submit Payment</button>
     </form>
 
-    <!-- Single MFA Field -->
     <div id="mfa-container">
         <h3>Enter MFA Token</h3>
         <input type="number" id="mfa-token" placeholder="Enter MFA Token" required>
         <button type="button" onclick="verifySingleMFA()">Verify MFA Token</button>
     </div>
 
-    <!-- Dual MFA Fields -->
     <div id="dual-mfa-container">
-        <h3>Enter First MFA Token and Second Employee's Email</h3>
+        <h3>Enter Your MFA Token and Second Employee's Username</h3>
         <input type="number" id="mfa-token1" placeholder="Enter Your MFA Token" required>
-        <input type="email" id="second-username" placeholder="Second Employee Email" required>
-        <button type="button" onclick="verifyDualMFA()">Submit for Approval</button> <!-- Make sure the onclick is set correctly -->
+        <input type="text" id="second-username" placeholder="Second Employee Username" required>
+        <button type="button" onclick="verifyDualMFA()">Submit for Approval</button>
     </div>
 
 

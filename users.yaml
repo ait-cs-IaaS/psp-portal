@@ -2,7 +2,7 @@ users:
   admin:
     password: admin
     mfa: 123
-    email: admin@example.com
+    email: anna.zelenajova@ait.ac.at
   swilliams:
     password: tastydishes
     mfa: 456

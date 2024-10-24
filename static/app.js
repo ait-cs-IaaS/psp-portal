@@ -138,8 +138,8 @@ function verifyDualMFA() {
     const secondUsernameElement = document.getElementById('second-username');
 
     if (!mfaToken1Element || !secondUsernameElement) {
-        console.error('MFA token or second email field is missing. Ensure the dual MFA fields are displayed.');
-        document.getElementById('mfa-message').textContent = 'MFA token and second email fields are missing.';
+        console.error('MFA token or second username field is missing. Ensure the dual MFA fields are displayed.');
+        document.getElementById('mfa-message').textContent = 'MFA token and second username fields are missing.';
         return;
     }
 
@@ -147,37 +147,27 @@ function verifyDualMFA() {
     const secondUsername = secondUsernameElement.value;
     const amount = parseFloat(document.getElementById('sum').value);
 
-    // Add detailed logging for troubleshooting
-    console.log('MFA Token 1:', mfaToken1);
-    console.log('Second Username (Email):', secondUsername);
-    console.log('Amount:', amount);
-
     if (!mfaToken1 || !secondUsername) {
         document.getElementById('mfa-message').textContent = 'All fields must be filled out for dual MFA.';
         return;
     }
 
+    // Send request to backend for dual MFA verification
     fetch('/verify-dual-mfa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             amount: amount,
             mfaToken: mfaToken1,
-            secondEmail: secondUsername  // Use the second email (from the second username field)
+            secondUsername: secondUsername  // Second username for dual verification
         })
     })
-    .then(response => {
-        console.log('Response status:', response.status);  // Log the status code
-        return response.json();  // Check if the response is valid JSON
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data);  // Log the response data for debugging
         if (data.success) {
             document.getElementById('mfa-message').textContent = 'Email sent for approval!';
-            console.log(`Email sent to ${secondUsername} for transaction approval.`);  // Log email sent
         } else {
-            document.getElementById('mfa-message').textContent = 'Invalid MFA token or second email. Payment not authorized.';
-            console.log('Error message:', data.error);  // Log the error message from the backend
+            document.getElementById('mfa-message').textContent = data.error || 'Invalid MFA token or second username. Payment not authorized.';
             setTimeout(() => {
                 window.location.href = '/payment-unsuccessful';
             }, 1000);
@@ -185,10 +175,11 @@ function verifyDualMFA() {
     })
     .catch(error => {
         document.getElementById('mfa-message').textContent = 'An error occurred. Please try again.';
-        console.error('Error during dual MFA verification:', error);  // Log any errors in the request
+        console.error('Error during dual MFA verification:', error);
     });
-    
 }
+
+
 
 
 

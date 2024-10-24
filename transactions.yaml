@@ -827,3 +827,15 @@ transactions:
   time: '17:42:49'
   transaction_id: TXN33910423
   type: debit
+- account:
+    account_number: ''
+    name: ''
+  amount: 1
+  currency: EUR
+  date: '2024-10-24'
+  description: ''
+  location: ''
+  status: Completed
+  time: '18:52:55'
+  transaction_id: TXN33910424
+  type: debit
