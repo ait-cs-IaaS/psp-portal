@@ -3,9 +3,13 @@ from backend.database import User, Transaction, db, generate_next_transaction_id
 from datetime import datetime
 import threading
 import time
-import random
 from flask_mail import Message
 import logging
+import base64
+import json
+import requests
+
+from flask import current_app
 
 
 
@@ -89,7 +93,30 @@ def auto_expire_transaction(app, transaction_id):
             logging.info(f"Transaction {transaction_id} automatically marked as Not Authorized.")
 
 
-from flask import current_app
+def send_to_orbiscloud(transaction_data):
+    try:
+        # Convert transaction data to JSON string and "encrypt" with base64
+        json_data = json.dumps(transaction_data)
+        encrypted_data = base64.b64encode(json_data.encode("utf-8")).decode("utf-8")
+        
+        # Construct OrbisCloud endpoint URL with "encrypted" string as a parameter
+        orbiscloud_url = "http://localhost:5001/receive-transaction"
+        
+        # Log the "encrypted" data that will be sent to OrbisCloud
+        logging.info(f"Sending 'encrypted' transaction to OrbisCloud: {encrypted_data}")
+        
+        # Send the POST request to OrbisCloud with the encrypted data in JSON format
+        response = requests.post(orbiscloud_url, json={"encrypted_data": encrypted_data})
+        
+        # Check the response from OrbisCloud
+        if response.status_code == 200:
+            logging.info(f"Transaction {transaction_data['transaction_id']} successfully sent to OrbisCloud.")
+        else:
+            logging.error(f"Failed to send transaction to OrbisCloud: {response.text}")
+    except Exception as e:
+        logging.error(f"Error sending to OrbisCloud: {str(e)}")
+
+
 
 @api.route('/verify-dual-mfa', methods=['POST'])
 def verify_dual_mfa():
@@ -207,6 +234,23 @@ def confirm_dual_mfa(transaction_id):
         transaction.status = 'Completed'
         db.session.commit()
 
+        # Convert transaction data to dictionary format before sending
+        transaction_data = {
+            'transaction_id': transaction.transaction_id,
+            'date': transaction.date,
+            'time': transaction.time,
+            'amount': transaction.amount,
+            'currency': transaction.currency,
+            'type': transaction.type,
+            'status': transaction.status,
+            'account_name': transaction.account_name,
+            'account_number': transaction.account_number,
+            'description': transaction.description,
+            'location': transaction.location
+        }
+
+        send_to_orbiscloud(transaction_data)
+
         return jsonify({"success": True, "message": "Transaction approved successfully!"})
 
 
@@ -269,6 +313,7 @@ def verify_payment_mfa():
         # Single MFA verification successful
         transaction_data['status'] = "Completed"
         add_transaction_to_history(transaction_data)
+        send_to_orbiscloud(transaction_data)
         return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
 
