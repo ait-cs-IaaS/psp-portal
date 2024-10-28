@@ -94,6 +94,11 @@ def add_transaction_to_history(transaction_data):
 
     logging.info(f"Adding transaction with ID: {transaction_id}")
 
+    # Extract account information from nested dictionary
+    account_info = transaction_data.get('account', {})
+    account_name = account_info.get('name', 'Unknown Account')
+    account_number = account_info.get('account_number', 'Unknown Account Number')
+
     # Add the transaction to the database
     new_transaction = Transaction(
         transaction_id=transaction_data['transaction_id'],
@@ -103,8 +108,8 @@ def add_transaction_to_history(transaction_data):
         currency=transaction_data['currency'],
         type=transaction_data['type'],
         status=transaction_data['status'],
-        account_name=transaction_data['account_name'],
-        account_number=transaction_data['account_number'],
+        account_name=account_name,
+        account_number=account_number,
         description=transaction_data['description'],
         location=transaction_data['location']
     )
@@ -127,8 +132,8 @@ def add_transaction_to_history(transaction_data):
             'type': transaction_data['type'],
             'status': transaction_data['status'],
             'account': {
-                'account_number': transaction_data['account_number'],
-                'name': transaction_data['account_name']
+                'account_number': account_number,
+                'name': account_name
             },
             'description': transaction_data['description'],
             'location': transaction_data['location']
@@ -142,6 +147,8 @@ def add_transaction_to_history(transaction_data):
         logging.info(f"Transaction {transaction_id} added to history with status: {transaction_data['status']}")
     else:
         logging.info(f"Transaction {transaction_id} already exists in YAML. Skipping addition.")
+
+
 
 
 # Test function to simulate adding a new transaction

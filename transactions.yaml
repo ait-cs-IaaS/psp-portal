@@ -468,542 +468,362 @@ transactions:
   transaction_id: TXN33910393
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU293847293847293847
+    name: Software Solutions Inc.
+  amount: 8700.5
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '13:25:25'
+  date: '2024-11-06'
+  description: Software licensing fees
+  location: Lustrien
+  status: completed
+  time: 09:47:10
   transaction_id: TXN33910394
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU283847293847928374
+    name: Business Consultants Ltd.
+  amount: 12500.0
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '13:25:37'
+  date: '2024-11-06'
+  description: Consulting services for project management
+  location: Lustrien
+  status: completed
+  time: '10:12:34'
   transaction_id: TXN33910395
   type: debit
 - account:
-    account_number: Default IBAN
-    name: Default Account Name
-  amount: 111111
+    account_number: LU483920394820394820
+    name: Stationery Supplies
+  amount: 3480.0
   currency: EUR
-  date: '2024-10-23'
-  description: Payment description
-  location: Unknown Location
-  status: Not Authorized
-  time: '13:27:29'
+  date: '2024-11-06'
+  description: Purchase of office stationery and supplies
+  location: Lustrien
+  status: completed
+  time: '10:37:58'
   transaction_id: TXN33910396
-  type: credit
+  type: debit
 - account:
-    account_number: Default IBAN
-    name: Default Account Name
-  amount: 1111111
+    account_number: LU392847293847283748
+    name: Regional Marketing Agency
+  amount: 9820.3
   currency: EUR
-  date: '2024-10-23'
-  description: Payment description
-  location: Unknown Location
-  status: Completed
-  time: '13:27:43'
+  date: '2024-11-06'
+  description: Payment for marketing campaign services
+  location: Lustrien
+  status: completed
+  time: '11:05:15'
   transaction_id: TXN33910397
-  type: credit
+  type: debit
 - account:
-    account_number: Default IBAN
-    name: Default Account Name
-  amount: 1111111
+    account_number: LU193847284820394837
+    name: Cleaning Services Co.
+  amount: 2750.4
   currency: EUR
-  date: '2024-10-23'
-  description: Payment description
-  location: Unknown Location
-  status: Completed
-  time: '13:33:30'
+  date: '2024-11-06'
+  description: Cleaning services for office spaces
+  location: Lustrien
+  status: completed
+  time: '11:29:22'
   transaction_id: TXN33910398
-  type: credit
+  type: debit
 - account:
-    account_number: Default IBAN
-    name: Default Account Name
-  amount: 111111111
+    account_number: LU294820394820398211
+    name: Conference Solutions Ltd.
+  amount: 5050.75
   currency: EUR
-  date: '2024-10-23'
-  description: Payment description
-  location: Unknown Location
-  status: Not Authorized
-  time: '14:15:15'
+  date: '2024-11-06'
+  description: Payment for event venue booking
+  location: Lustrien
+  status: completed
+  time: '11:58:45'
   transaction_id: TXN33910399
-  type: credit
+  type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU393847192837462849
+    name: Courier Express
+  amount: 1640.85
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '14:48:52'
+  date: '2024-11-06'
+  description: Shipping and delivery expenses
+  location: Lustrien
+  status: completed
+  time: '12:22:18'
   transaction_id: TXN33910400
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU293847293847293920
+    name: Health Insurance Provider
+  amount: 23350.0
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '14:48:59'
+  date: '2024-11-06'
+  description: Employee health insurance coverage payment
+  location: Lustrien
+  status: completed
+  time: '12:47:52'
   transaction_id: TXN33910401
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU483920394820293847
+    name: Electric Utility Company
+  amount: 8425.5
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '15:08:06'
+  date: '2024-11-06'
+  description: Electricity service charges
+  location: Lustrien
+  status: completed
+  time: '13:15:40'
   transaction_id: TXN33910402
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU193847293847182837
+    name: Property Management Co.
+  amount: 9600.0
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '15:10:28'
+  date: '2024-11-06'
+  description: Building maintenance service fees
+  location: Lustrien
+  status: completed
+  time: '13:37:29'
   transaction_id: TXN33910403
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU393847293847293847
+    name: Global Media Ltd.
+  amount: 4100.15
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '15:10:45'
+  date: '2024-11-06'
+  description: Media coverage services
+  location: Lustrien
+  status: completed
+  time: '14:08:54'
   transaction_id: TXN33910404
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU493847183847283748
+    name: Legal Advisory Services
+  amount: 15830.6
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '15:15:42'
+  date: '2024-11-06'
+  description: Legal consultation for business expansion
+  location: Lustrien
+  status: completed
+  time: '14:30:33'
   transaction_id: TXN33910405
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU483920394820384729
+    name: Lustrien Digital Solutions
+  amount: 6750.85
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '15:15:49'
+  date: '2024-11-06'
+  description: IT infrastructure support and maintenance
+  location: Lustrien
+  status: completed
+  time: '14:57:12'
   transaction_id: TXN33910406
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU392847192837483920
+    name: Office Snacks Ltd.
+  amount: 1045.0
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '15:19:05'
+  date: '2024-11-06'
+  description: Refreshments for employee break rooms
+  location: Lustrien
+  status: completed
+  time: '15:21:08'
   transaction_id: TXN33910407
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU192847394847284720
+    name: City Waste Management
+  amount: 3125.45
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '15:19:13'
+  date: '2024-11-06'
+  description: Waste disposal services for facilities
+  location: Lustrien
+  status: completed
+  time: '15:45:36'
   transaction_id: TXN33910408
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU493847183947293847
+    name: Regional Office Supplies
+  amount: 2940.65
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '16:22:40'
+  date: '2024-11-06'
+  description: Purchase of general office supplies
+  location: Lustrien
+  status: completed
+  time: '16:13:20'
   transaction_id: TXN33910409
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU382847293847283748
+    name: Employee Benefits Co.
+  amount: 2830.9
   currency: EUR
-  date: '2024-10-23'
-  description: ''
-  location: ''
-  status: Completed
-  time: '16:30:19'
+  date: '2024-11-06'
+  description: Employee wellness and benefit services
+  location: Lustrien
+  status: completed
+  time: '16:35:50'
   transaction_id: TXN33910410
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU482930847294203748
+    name: Conference Organizers
+  amount: 4250.35
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Completed
-  time: '13:10:52'
+  date: '2024-11-06'
+  description: Participation fees for business conference
+  location: Lustrien
+  status: completed
+  time: '17:02:12'
   transaction_id: TXN33910411
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU283847293847293847
+    name: Web Hosting Co.
+  amount: 1920.75
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '13:11:03'
+  date: '2024-11-06'
+  description: Web hosting services renewal
+  location: Lustrien
+  status: completed
+  time: '17:26:40'
   transaction_id: TXN33910412
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU193847394847394820
+    name: Client Refund Services
+  amount: 10500.0
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Completed
-  time: '14:00:50'
+  date: '2024-11-06'
+  description: Client refund for overpayment
+  location: Lustrien
+  status: completed
+  time: '17:52:18'
   transaction_id: TXN33910413
-  type: debit
+  type: credit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: LU493847183947293847
+    name: Corporate Travel Agency
+  amount: 8950.9
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Completed
-  time: '14:15:29'
+  date: '2024-11-06'
+  description: Business travel arrangements
+  location: Lustrien
+  status: completed
+  time: '18:01:29'
   transaction_id: TXN33910414
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: '222'
+    name: '222'
+  amount: 222
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: '222'
+  location: '2222'
   status: Completed
-  time: '14:19:02'
+  time: '14:34:31'
   transaction_id: TXN33910415
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: test
+    name: Real Estate Services
+  amount: 19750.0
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: Brokerage fees for property leasing
+  location: Lustrien
   status: Completed
-  time: '14:28:51'
+  time: '14:54:00'
   transaction_id: TXN33910416
-  type: debit
+  type: Debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: Unknown Account Number
+    name: Unknown Account
+  amount: 222
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Not Authorized
-  time: '14:28:58'
+  date: '2024-10-28'
+  description: '111'
+  location: '333'
+  status: Completed
+  time: '14:57:38'
   transaction_id: TXN33910417
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: Unknown Account Number
+    name: Unknown Account
+  amount: 22222222
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Completed
-  time: '14:40:00'
+  date: '2024-10-28'
+  description: '222'
+  location: '222'
+  status: Pending Approval
+  time: '14:57:53'
   transaction_id: TXN33910418
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: test
+    name: Real Estate Services
+  amount: 19750.0
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: Brokerage fees for property leasing
+  location: Lustrien
   status: Completed
-  time: '14:44:58'
+  time: '14:58:00'
   transaction_id: TXN33910419
-  type: debit
+  type: Debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: Unknown Account Number
+    name: Unknown Account
+  amount: 22
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: '333'
+  location: '222'
   status: Completed
-  time: '14:59:42'
+  time: '14:58:25'
   transaction_id: TXN33910420
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: Unknown Account Number
+    name: Unknown Account
+  amount: 444
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: '444'
+  location: '555'
   status: Completed
-  time: '15:03:26'
+  time: '14:58:53'
   transaction_id: TXN33910421
   type: debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: test
+    name: Real Estate Services
+  amount: 19750.0
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: Brokerage fees for property leasing
+  location: Lustrien
   status: Completed
-  time: '17:04:07'
+  time: '14:59:00'
   transaction_id: TXN33910422
-  type: debit
+  type: Debit
 - account:
-    account_number: ''
-    name: ''
-  amount: 1
+    account_number: test
+    name: Real Estate Services
+  amount: 19750.0
   currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
+  date: '2024-10-28'
+  description: Brokerage fees for property leasing
+  location: Lustrien
   status: Completed
-  time: '17:42:49'
+  time: '15:00:00'
   transaction_id: TXN33910423
-  type: debit
-- account:
-    account_number: ''
-    name: ''
-  amount: 1
-  currency: EUR
-  date: '2024-10-24'
-  description: ''
-  location: ''
-  status: Completed
-  time: '18:52:55'
-  transaction_id: TXN33910424
-  type: debit
-- account:
-    account_number: IBAN12345678
-    name: admin
-  amount: 111111111
-  currency: EUR
-  date: '2024-10-24'
-  description: Pending transaction for dual approval
-  location: Online
-  status: Pending Approval
-  time: '19:06:54'
-  transaction_id: TXN33910425
-  type: debit
-- account:
-    account_number: ddd
-    name: ddd
-  amount: 11111
-  currency: EUR
-  date: '2024-10-24'
-  description: www
-  location: www
-  status: Completed
-  time: '19:59:24'
-  transaction_id: TXN33910426
-  type: debit
-- account:
-    account_number: rr
-    name: rrr
-  amount: 1
-  currency: EUR
-  date: '2024-10-24'
-  description: ee
-  location: er
-  status: Completed
-  time: '20:07:35'
-  transaction_id: TXN33910427
-  type: credit
-- account:
-    account_number: '222'
-    name: '2222'
-  amount: 11111111
-  currency: EUR
-  date: '2024-10-24'
-  description: 1ew
-  location: ee
-  status: Pending Approval
-  time: '20:07:51'
-  transaction_id: TXN33910428
-  type: credit
-- account:
-    account_number: wedwef
-    name: fqefq
-  amount: 12222222
-  currency: EUR
-  date: '2024-10-24'
-  description: w
-  location: e
-  status: Pending Approval
-  time: '20:20:52'
-  transaction_id: TXN33910429
-  type: debit
-- account:
-    account_number: e
-    name: eeeee
-  amount: 111111111
-  currency: EUR
-  date: '2024-10-24'
-  description: eeee
-  location: eee
-  status: Pending Approval
-  time: '20:24:22'
-  transaction_id: TXN33910430
-  type: debit
-- account:
-    account_number: '2'
-    name: '33'
-  amount: 11111111
-  currency: EUR
-  date: '2024-10-24'
-  description: '22'
-  location: '2222'
-  status: Pending Approval
-  time: '20:26:38'
-  transaction_id: TXN33910431
-  type: debit
-- account:
-    account_number: rrr
-    name: rr
-  amount: 11111111
-  currency: EUR
-  date: '2024-10-24'
-  description: '111'
-  location: '111'
-  status: Pending Approval
-  time: '20:30:24'
-  transaction_id: TXN33910432
-  type: debit
-- account:
-    account_number: rrr
-    name: rr
-  amount: 11111111
-  currency: EUR
-  date: '2024-10-24'
-  description: '111'
-  location: '111'
-  status: Pending Approval
-  time: '20:30:25'
-  transaction_id: TXN33910433
-  type: debit
-- account:
-    account_number: '111'
-    name: '1111'
-  amount: 1
-  currency: EUR
-  date: '2024-10-25'
-  description: '11'
-  location: '11'
-  status: Completed
-  time: 09:08:11
-  transaction_id: TXN33910434
-  type: debit
-- account:
-    account_number: '2222'
-    name: '222'
-  amount: 11111111
-  currency: EUR
-  date: '2024-10-25'
-  description: '11'
-  location: '11'
-  status: Pending Approval
-  time: 09:08:36
-  transaction_id: TXN33910435
-  type: debit
-- account:
-    account_number: ww
-    name: ww
-  amount: 1
-  currency: EUR
-  date: '2024-10-25'
-  description: '222'
-  location: '22'
-  status: Completed
-  time: 09:28:25
-  transaction_id: TXN33910436
-  type: debit
-- account:
-    account_number: '3333'
-    name: '333'
-  amount: 1
-  currency: EUR
-  date: '2024-10-25'
-  description: '22'
-  location: '33'
-  status: Completed
-  time: 09:33:23
-  transaction_id: TXN33910437
-  type: debit
-- account:
-    account_number: '444'
-    name: '4'
-  amount: 55555555555
-  currency: EUR
-  date: '2024-10-25'
-  description: '44'
-  location: '444'
-  status: Pending Approval
-  time: 09:34:32
-  transaction_id: TXN33910438
-  type: debit
+  type: Debit

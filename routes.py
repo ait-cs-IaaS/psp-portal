@@ -317,6 +317,35 @@ def verify_payment_mfa():
         return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
 
+@api.route('/receive-transaction', methods=['POST'])
+def receive_transaction():
+    """
+    Endpoint to receive transactions from OrbisCloud, decode and save them.
+    """
+    data = request.get_json()
+
+    # Check if encrypted data is in the request
+    if not data or "encrypted_data" not in data:
+        return jsonify({"error": "No encrypted transaction data received"}), 400
+
+    try:
+        # Decode and parse the transaction data
+        decoded_data = base64.b64decode(data["encrypted_data"]).decode("utf-8")
+        transaction_data = json.loads(decoded_data)
+
+        # Add transaction to history
+        add_transaction_to_history(transaction_data)
+
+        logging.info(f"Received transaction from OrbisCloud: {transaction_data}")
+        return jsonify({"status": "Transaction received and added to history"}), 200
+
+    except (json.JSONDecodeError, base64.binascii.Error) as e:
+        logging.error(f"Failed to decode or parse transaction data: {str(e)}")
+        return jsonify({"error": f"Failed to decode transaction data: {str(e)}"}), 400
+    except Exception as e:
+        logging.error(f"Error adding transaction to history: {str(e)}")
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
 
 
 # Transaction history route
