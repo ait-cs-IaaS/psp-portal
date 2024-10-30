@@ -11,7 +11,7 @@ import requests
 
 from flask import current_app
 
-
+orbis_endpoint = os.getenv('ORBIS')
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -98,9 +98,10 @@ def send_to_orbiscloud(transaction_data):
         # Convert transaction data to JSON string and "encrypt" with base64
         json_data = json.dumps(transaction_data)
         encrypted_data = base64.b64encode(json_data.encode("utf-8")).decode("utf-8")
-        
+
+        global orbis_endpoint
         # Construct OrbisCloud endpoint URL with "encrypted" string as a parameter
-        orbiscloud_url = "http://localhost:5001/receive-transaction"
+        orbiscloud_url = f"{ orbis_endpoint }/transactions"
         
         # Log the "encrypted" data that will be sent to OrbisCloud
         logging.info(f"Sending 'encrypted' transaction to OrbisCloud: {encrypted_data}")
