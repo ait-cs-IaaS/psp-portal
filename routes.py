@@ -7,6 +7,7 @@ from flask_mail import Message
 import logging
 import base64
 import json
+import os
 import requests
 
 from flask import current_app
