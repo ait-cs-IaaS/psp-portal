@@ -318,7 +318,7 @@ def verify_payment_mfa():
         return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
 
-@api.route('/receive-transaction', methods=['POST'])
+@api.route('/transaction', methods=['POST'])
 def receive_transaction():
     """
     Endpoint to receive transactions from OrbisCloud, decode and save them.
