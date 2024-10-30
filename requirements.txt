@@ -6,4 +6,4 @@ Flask-CORS
 Flask-JWT-Extended
 PyYAML==6.0.1
 requests
-dotenv
+python-dotenv
