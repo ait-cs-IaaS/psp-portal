@@ -4,6 +4,6 @@ Flask-Mail
 Flask-Migrate
 Flask-CORS
 Flask-JWT-Extended
-PyYAML
+PyYAML==6.0.1
 requests
 dotenv
