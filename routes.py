@@ -108,7 +108,7 @@ def send_to_orbiscloud(transaction_data):
         logging.info(f"Sending 'encrypted' transaction to OrbisCloud: {encrypted_data}")
         
         # Send the POST request to OrbisCloud with the encrypted data in JSON format
-        response = requests.post(orbiscloud_url, json={"encrypted_data": encrypted_data})
+        response = requests.post(orbiscloud_url, json={"encrypted_data": encrypted_data}, verify=False)
         
         # Check the response from OrbisCloud
         if response.status_code == 200:
