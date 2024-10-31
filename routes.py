@@ -208,6 +208,9 @@ def verify_dual_mfa():
 
 @api.route('/confirm-dual-mfa/<transaction_id>', methods=['GET', 'POST'])
 def confirm_dual_mfa(transaction_id):
+        # Check if the user is logged in
+    if 'username' not in session:
+        return redirect(url_for('api.index'))  # If not logged in, redirect to login
     # Retrieve the transaction from the database
     transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
 
