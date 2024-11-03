@@ -4,78 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction History</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            text-transform: capitalize; /* Capitalize the first letter of each word */
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .pagination a {
-            margin: 0 5px;
-            padding: 10px 20px;
-            background-color: #0077cc;
-            color: white;
-            text-decoration: none;
-        }
-        .pagination a:hover {
-            background-color: #005fa3;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; }
+        .container { max-width: 95%; }
+        .table-container { margin: 20px auto; max-width: 100%; }
+        .table th, .table td { vertical-align: middle; padding: 8px; font-size: 0.9em; height: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .table-hover tbody tr:hover { background-color: #f1f1f1; }
+        .filter-row { margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .filter-input { max-width: 150px; font-size: 0.85em; flex-grow: 1; }
+        .pagination { display: flex; justify-content: space-between; margin: 15px 0; }
     </style>
 </head>
 <body>
-    <h1>Transaction History</h1>
+    <div class="container">
+        <h1 class="text-center my-3">Transaction History</h1>
 
-    <table>
-        <tr>
-            <th>Transaction ID</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Status</th>
-            <th>Account Name</th>
-            <th>Account Number</th>
-            <th>Description</th>
-            <th>Location</th>
-        </tr>
-        {% for transaction in transactions %}
-        <tr>
-            <td>{{ transaction.transaction_id }}</td>
-            <td>{{ transaction.date }}</td>
-            <td>{{ transaction.time }}</td>
-            <td>{{ transaction.amount }}</td>
-            <td>{{ transaction.currency }}</td>
-            <td>{{ transaction.status }}</td>
-            <td>{{ transaction.account_name }}</td>
-            <td>{{ transaction.account_number }}</td>
-            <td>{{ transaction.description }}</td>
-            <td>{{ transaction.location }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+        <!-- Filter Section -->
+        <div class="filter-row">
+            <input type="text" class="form-control filter-input" id="filter-id" placeholder="Transaction ID" value="{{ filters.filter_id }}">
+            <input type="date" class="form-control filter-input" id="filter-date" placeholder="Date" value="{{ filters.filter_date }}">
+            <select class="form-control filter-input" id="filter-status">
+                <option value="">Status</option>
+                <option value="completed" {% if filters.filter_status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="pending approval" {% if filters.filter_status == 'pending approval' %}selected{% endif %}>Pending Approval</option>
+                <option value="not authorized" {% if filters.filter_status == 'not authorized' %}selected{% endif %}>Not Authorized</option>
+            </select>
+            <input type="number" class="form-control filter-input" id="filter-amount-from" placeholder="Amount From" value="{{ filters.filter_amount_from }}">
+            <input type="number" class="form-control filter-input" id="filter-amount-to" placeholder="Amount To" value="{{ filters.filter_amount_to }}">
+            <input type="text" class="form-control filter-input" id="filter-account-name" placeholder="Account Name" value="{{ filters.filter_account_name }}">
+            <input type="text" class="form-control filter-input" id="filter-account-number" placeholder="Account Number" value="{{ filters.filter_account_number }}">
 
-    <div class="pagination">
-        {% if page > 1 %}
-        <a href="{{ url_for('api.transaction_history', page=page-1) }}">Previous</a>
-        {% endif %}
-        <a href="{{ url_for('api.transaction_history', page=page+1) }}">Next</a>
-    </div>
+            <!-- Sorting Dropdown for Ascending, Descending, or No Sort -->
+            <select class="form-control filter-input" id="amount-sort-order">
+                <option value="">Sort by Amount: No Sort</option>
+                <option value="desc" {% if filters.amount_sort == 'desc' %}selected{% endif %}>Sort by Amount: Descending</option>
+                <option value="asc" {% if filters.amount_sort == 'asc' %}selected{% endif %}>Sort by Amount: Ascending</option>
+            </select>
 
-    <button onclick="window.location.href='/payment-page'">Back to Payment Portal</button>
+            <button class="btn btn-primary filter-input" onclick="applyFilters()">Apply Filters</button>
+            <button class="btn btn-secondary filter-input" onclick="removeFilters()">Remove Filters</button>
+        </div>
+
+        <!-- Transaction Table -->
+        <div class="table-responsive table-container">
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Amount</th>
+                        <th>Currency</th>
+                        <th>Status</th>
+                        <th>Account Name</th>
+                        <th>Account Number</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-table">
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.transaction_id }}</td>
+                        <td>{{ transaction.date }}</td>
+                        <td>{{ transaction.time }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.currency }}</td>
+                        <td>{{ transaction.status | capitalize }}</td>
+                        <td>{{ transaction.account_name | capitalize }}</td>
+                        <td>{{ transaction.account_number }}</td>
+                        <td>{{ transaction.description | capitalize }}</td>
+                        <td>{{ transaction.location | capitalize }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Section -->
+        <div class="pagination">
+            {% set filter_params = {
+                'filter_id': filters.filter_id,
+                'filter_date': filters.filter_date,
+                'filter_status': filters.filter_status,
+                'filter_amount_from': filters.filter_amount_from,
+                'filter_amount_to': filters.filter_amount_to,
+                'filter_account_name': filters.filter_account_name,
+                'filter_account_number': filters.filter_account_number,
+                'amount_sort': filters.amount_sort
+            } %}
+            
+            {% if page > 1 %}
+                <a href="{{ url_for('api.transaction_history', page=page-1, **filter_params) }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+            
+            {% if page < total_pages %}
+                <a href="{{ url_for('api.transaction_history', page=page+1, **filter_params) }}" class="btn btn-secondary ml-auto">Next</a>
+            {% endif %}
+        </div>
+
+    <!-- JavaScript to handle filtering and sorting -->
+    <script>
+        function applyFilters() {
+            const url = new URL(window.location.href);
+            const params = {
+                filter_id: document.getElementById('filter-id').value,
+                filter_date: document.getElementById('filter-date').value,
+                filter_status: document.getElementById('filter-status').value,
+                filter_amount_from: document.getElementById('filter-amount-from').value,
+                filter_amount_to: document.getElementById('filter-amount-to').value,
+                filter_account_name: document.getElementById('filter-account-name').value,
+                filter_account_number: document.getElementById('filter-account-number').value,
+                amount_sort: document.getElementById('amount-sort-order').value,
+                page: 1 // Reset to the first page on new filter application
+            };
+            Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+            window.location.href = url.toString();
+        }
+
+        function removeFilters() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('amount_sort', '');  // Reset sorting to no sort
+            url.searchParams.delete('filter_id');
+            url.searchParams.delete('filter_date');
+            url.searchParams.delete('filter_status');
+            url.searchParams.delete('filter_amount_from');
+            url.searchParams.delete('filter_amount_to');
+            url.searchParams.delete('filter_account_name');
+            url.searchParams.delete('filter_account_number');
+            url.searchParams.set('page', 1);  // Reset to the first page
+            window.location.href = url.toString();
+        }
+    </script>
 </body>
 </html>

@@ -12,6 +12,8 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from flask import request
+
 
 from flask import current_app
 
@@ -462,16 +464,77 @@ def receive_transaction():
 
 
 
-# Transaction history route
+# Transaction history route with enhanced filtering and sorting logic
 @api.route('/transaction-history', methods=['GET'])
 def transaction_history():
     if 'username' not in session:
         return redirect(url_for('api.index'))
+    
+    # Pagination and sorting parameters
     page = request.args.get('page', 1, type=int)
-    transactions_query = Transaction.query.order_by(Transaction.date.desc(), Transaction.time.desc())
+    amount_sort = request.args.get('amount_sort', 'desc')  # Default amount sorting order is descending
+
+    # Filtering parameters from request arguments
+    filter_id = request.args.get('filter_id', '').strip()
+    filter_date = request.args.get('filter_date', '').strip()
+    filter_status = request.args.get('filter_status', '').strip()
+    filter_amount_from = request.args.get('filter_amount_from', None, type=float)
+    filter_amount_to = request.args.get('filter_amount_to', 1000000000.0, type=float)
+    filter_account_name = request.args.get('filter_account_name', '').strip()
+    filter_account_number = request.args.get('filter_account_number', '').strip()
+    
+    # Start the base query for transactions
+    transactions_query = Transaction.query
+
+    # Apply filters to the query
+    if filter_id:
+        transactions_query = transactions_query.filter(Transaction.transaction_id.ilike(f"%{filter_id}%"))
+    if filter_date:
+        transactions_query = transactions_query.filter(Transaction.date == filter_date)
+    if filter_status:
+        transactions_query = transactions_query.filter(Transaction.status.ilike(f"%{filter_status}%"))
+    if filter_amount_from is not None:
+        transactions_query = transactions_query.filter(Transaction.amount >= filter_amount_from)
+    if filter_amount_to:
+        transactions_query = transactions_query.filter(Transaction.amount <= filter_amount_to)
+    if filter_account_name:
+        transactions_query = transactions_query.filter(Transaction.account_name.ilike(f"%{filter_account_name}%"))
+    if filter_account_number:
+        transactions_query = transactions_query.filter(Transaction.account_number.ilike(f"%{filter_account_number}%"))
+
+    # Sorting logic based on amount_sort
+    if amount_sort == 'asc':
+        transactions_query = transactions_query.order_by(Transaction.amount.asc())
+    elif amount_sort == 'desc':
+        transactions_query = transactions_query.order_by(Transaction.amount.desc())
+    else:
+        # Default to sorting by date and time in descending order if no amount sorting is applied
+        transactions_query = transactions_query.order_by(Transaction.date.desc(), Transaction.time.desc())
+
+    # Paginate the results
     transactions_paginated = transactions_query.paginate(page=page, per_page=12, error_out=False)
     transactions = transactions_paginated.items
-    return render_template('transaction-history.html', transactions=transactions, page=page)
+    
+    # Pass filters and sorting to the template to keep them persistent
+    filters = {
+        'filter_id': filter_id,
+        'filter_date': filter_date,
+        'filter_status': filter_status,
+        'filter_amount_from': '' if filter_amount_from is None else filter_amount_from,
+        'filter_amount_to': '' if filter_amount_to == 1000000000.0 else filter_amount_to,
+        'filter_account_name': filter_account_name,
+        'filter_account_number': filter_account_number,
+        'amount_sort': amount_sort
+    }
+    
+    # Render the transaction history page with pagination, filters, and sorting
+    return render_template('transaction-history.html', 
+                           transactions=transactions, 
+                           page=page, 
+                           total_pages=transactions_paginated.pages,
+                           filters=filters)
+
+
 
 
 
