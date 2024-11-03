@@ -33,51 +33,7 @@ api = Blueprint('api', __name__)
 def index():
     return render_template('login.html')
 
-
-@api.route('/send-test-email', methods=['GET'])
-def send_test_email():
-    smtp_server = "smtp.mailgun.org"
-    port = 587  # Try 465 for SSL if needed
-    login = current_app.config['MAIL_USERNAME']
-    password = current_app.config['MAIL_PASSWORD']
-    to_address = "a.zelenajova@gmail.com"
-    subject = "Test Email from Flask"
-    body = "This is a test email from Flask using smtplib directly."
-
-    # Set up the message
-    msg = MIMEMultipart()
-    msg['From'] = current_app.config['MAIL_DEFAULT_SENDER']
-    msg['To'] = to_address
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-
-    server = None
-    try:
-        current_app.logger.info(f"Attempting to send email to: {to_address}")
-        
-        # Initialize the server connection
-        server = smtplib.SMTP(smtp_server, port)
-        
-        # Start TLS
-        response = server.starttls()
-        current_app.logger.info(f"TLS response: {response}")
-
-        # Attempt login
-        response = server.login(login, password)
-        current_app.logger.info(f"Login response: {response}")
-        
-        # Send the email
-        server.sendmail(login, to_address, msg.as_string())
-        current_app.logger.info(f"Email sent successfully to: {to_address}")
-        
-        return f"Test email sent successfully to {to_address}!"
-    
-    except smtplib.SMTPServerDisconnected as e:
-        current_app.logger.error(f"SMTP server disconnected unexpectedly. Error: {e}")
-        return "SMTP server disconnected unexpectedly. Please check your connection and settings.", 500
-    
-
-    
+ 
 # Login route
 @api.route('/login', methods=['POST'])
 def login():
@@ -354,21 +310,32 @@ def confirm_dual_mfa(transaction_id):
             'location': transaction.location,
             'second_user': transaction.second_user
         }
+
         send_to_orbiscloud(transaction_data)
-        flash("Transaction successfully confirmed and sent.")
-        return redirect(url_for('api.payment_success'))
+        flash("Transaction successfully confirmed and sent.");
+
+        # Redirect to the dual MFA payment success page
+        return redirect(url_for('api.dual_mfa_payment_successful'))  # New redirect route
 
 
+@api.route('/dual-mfa-payment-successful', methods=['GET'])
+def dual_mfa_payment_successful():
+    # Log session information for debugging
+    logging.info(f"Current session: {session}")
+
+    # Check if the user is logged in
+    if 'username' not in session:
+        logging.warning("User not logged in. Redirecting to index.")
+        return redirect(url_for('api.index'))  # If not logged in, redirect to login
+
+    return render_template('dual-mfa-payment-successful.html')  # Render the success page
 
 
-
-
-# Verify payment and handle MFA
 @api.route('/verify-payment-mfa', methods=['POST'])
 def verify_payment_mfa():
     data = request.json
     print("Received data for payment MFA verification:", data)  # Debugging statement
-    second_email = data.get('secondEmail', None)  # Second email for dual MFA only
+    
     mfa_token = data.get('mfaToken')
     amount = data.get('amount')
     iban = data.get('iban')
@@ -378,7 +345,18 @@ def verify_payment_mfa():
     description = data.get('description')
     location = data.get('location')
 
-    # Transaction data object for single MFA
+    # Check if the user is logged in
+    if 'username' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    username = session['username']
+    user = User.query.filter_by(username=username).first()
+
+    # Verify the MFA token
+    if not user or str(user.mfa) != str(mfa_token):
+        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
+
+    # Proceed with the payment process
     transaction_data = {
         'amount': amount,
         'currency': currency,
@@ -389,48 +367,17 @@ def verify_payment_mfa():
         'location': location,
         'date': datetime.now().strftime("%Y-%m-%d"),
         'time': datetime.now().strftime("%H:%M:%S"),
+        'status': 'Completed'  # Mark as completed if payment is successful
     }
 
-    # Check if the user is logged in
-    if 'username' not in session:
-        return jsonify({"error": "Unauthorized"}), 401
+    # Add transaction to history
+    add_transaction_to_history(transaction_data)
 
-    username = session['username']
-    user = User.query.filter_by(username=username).first()
+    # Send to OrbisCloud or any other processing if needed
+    send_to_orbiscloud(transaction_data)
 
-    if not user or str(user.mfa) != str(mfa_token):
-        transaction_data['status'] = "Not Authorized"
-        add_transaction_to_history(transaction_data)
-        return jsonify({"error": "Invalid MFA token for the logged-in user"}), 401
+    return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
-    # If amount is greater than or equal to 50,000, initiate dual MFA verification
-    if float(amount) >= 50000:
-        # Ensure second email is provided for dual MFA
-        if not second_email:
-            return jsonify({"error": "Second email required for dual verification"}), 400
-
-        try:
-            # Send email to second approver for dual verification
-            mail = current_app.extensions.get('mail')
-            msg = Message(
-                subject="Transaction Approval Required",
-                recipients=[second_email],  # Send to second email
-                body=f"Hello,\n\nYou need to approve a transaction of {amount} EUR. Please confirm your approval.\n\nThanks!",
-                sender=current_app.config['MAIL_DEFAULT_SENDER']  # Sender is defined in app.py
-            )
-            mail.send(msg)
-
-            return jsonify({"success": True, "message": f"Email sent to {second_email} for approval"}), 200
-
-        except Exception as e:
-            return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
-
-    else:
-        # Single MFA verification successful
-        transaction_data['status'] = "Completed"
-        add_transaction_to_history(transaction_data)
-        send_to_orbiscloud(transaction_data)
-        return jsonify({"success": True, "message": "Payment authorized with single MFA"}), 200
 
 
 @api.route('/transaction', methods=['POST'])
@@ -535,6 +482,10 @@ def transaction_history():
                            filters=filters)
 
 
+
+@api.route('/dual-mfa-email-sent', methods=['GET'])
+def dual_mfa_email_sent():
+    return render_template('dual-mfa-email-sent.html')
 
 
 

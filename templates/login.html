@@ -127,5 +127,22 @@
     </div>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure this is linked -->
+
+    <script>
+        // Handle Enter key press for Login and Verify MFA Token buttons
+        document.getElementById('login-form').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                login();  // Call the login function on Enter key press
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+
+        document.getElementById('mfa-token-container').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                verifyMFA();  // Call the verifyMFA function on Enter key press
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    </script>
 </body>
 </html>

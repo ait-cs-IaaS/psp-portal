@@ -119,14 +119,14 @@ function verifySingleMFA() {
     .then(data => {
         if (data.success) {
             mfaMessage.style.color = 'green';
-            mfaMessage.textContent = 'Payment successful! Redirecting...';
+            mfaMessage.textContent = 'Payment successful! Redirecting...'; 
             setTimeout(() => {
-                window.location.href = '/payment-successful';
+                window.location.href = '/payment-successful'; // Ensure this is correct
             }, 1000);
         } else {
             mfaMessage.textContent = 'Invalid MFA token. Payment not authorized.';
             setTimeout(() => {
-                window.location.href = '/payment-unsuccessful';
+                window.location.href = '/payment-unsuccessful'; // Ensure this is correct
             }, 1000);
         }
     })
@@ -159,7 +159,7 @@ function verifyDualMFA() {
         body: JSON.stringify({
             amount: amount,
             mfaToken: mfaToken1,
-            secondUsername: secondUsername,  // Pass the designated second user for verification
+            secondUsername: secondUsername,
             iban: iban,
             account_name: account_name,  
             currency: currency,
@@ -171,7 +171,8 @@ function verifyDualMFA() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            mfaMessage.textContent = 'Email sent for approval!';
+            // Redirect to the dual MFA email sent page
+            window.location.href = '/dual-mfa-email-sent';
         } else {
             mfaMessage.textContent = data.error || 'Transaction not authorized.';
             setTimeout(() => {
