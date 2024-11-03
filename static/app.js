@@ -48,7 +48,6 @@ function loadPaymentPage() {
 function verifyMFA() {
     const mfaToken = document.getElementById('mfa-token').value;
     const mfaMessage = document.getElementById('mfa-message');
-    const loginMessage = document.getElementById('login-message');
 
     // Clear previous messages
     mfaMessage.textContent = '';
@@ -108,10 +107,10 @@ function verifySingleMFA() {
         body: JSON.stringify({
             amount: amount,
             mfaToken: mfaToken,
-            currency: "EUR",
+            currency: document.getElementById('currency').value,
             type: document.getElementById('transaction-type').value,
-            accountName: document.getElementById('name').value,
-            iban: document.getElementById('iban').value,
+            account_name: document.getElementById('name').value, 
+            iban: document.getElementById('iban').value,         
             description: document.getElementById('description').value,
             location: document.getElementById('location').value
         })
@@ -137,17 +136,16 @@ function verifySingleMFA() {
     });
 }
 
-// Function to handle dual MFA verification
 function verifyDualMFA() {
     const mfaToken1 = document.getElementById('mfa-token1').value;
     const secondUsername = document.getElementById('second-username').value;
     const amount = parseFloat(document.getElementById('sum').value);
-    const iban = document.getElementById('iban').value.trim();
-    const accountName = document.getElementById('name').value.trim();
-    const currency = document.getElementById('currency').value.trim();
-    const type = document.getElementById('transaction-type').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const location = document.getElementById('location').value.trim();
+    const iban = document.getElementById('iban').value;
+    const account_name = document.getElementById('name').value;  
+    const currency = document.getElementById('currency').value;
+    const type = document.getElementById('transaction-type').value;
+    const description = document.getElementById('description').value;
+    const location = document.getElementById('location').value;
     const mfaMessage = document.getElementById('mfa-message');
 
     if (!mfaToken1 || !secondUsername) {
@@ -155,16 +153,15 @@ function verifyDualMFA() {
         return;
     }
 
-    // Send the form data to the backend for dual MFA processing
     fetch('/verify-dual-mfa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             amount: amount,
             mfaToken: mfaToken1,
-            secondUsername: secondUsername,
+            secondUsername: secondUsername,  // Pass the designated second user for verification
             iban: iban,
-            accountName: accountName,
+            account_name: account_name,  
             currency: currency,
             type: type,
             description: description,
@@ -187,6 +184,7 @@ function verifyDualMFA() {
         console.error('Error during dual MFA verification:', error);
     });
 }
+
 
 
 

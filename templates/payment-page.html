@@ -68,23 +68,26 @@
     <button onclick="showPaymentForm()">Send Payment</button>
     <button onclick="window.location.href='/transaction-history'">View Transaction History</button> <!-- Added Button -->
 
+    <!-- Test Email Button -->
+    <form action="/send-test-email" method="get" style="display:inline;">
+        <button type="submit">Test Email</button>
+    </form>
+
+
     <!-- Payment Form -->
     <form id="payment-form">
         <input type="text" id="iban" name="iban" placeholder="IBAN" required>
-        <input type="text" id="name" name="account_name" placeholder="Account Name" required>
+        <input type="text" id="name" name="name" placeholder="Account Name" required>
         <input type="text" id="execution-date" name="execution_date" readonly> <!-- Prefilled with current date -->
         <input type="number" id="sum" name="amount" placeholder="Amount" required>
         <input type="text" id="currency" name="currency" value="EUR" readonly> <!-- Prefilled with EUR, readonly -->
-        <select id="transaction-type" name="type" required>
-            <option value="">Select Transaction Type</option>
-            <option value="debit">Debit</option>
-            <option value="credit">Credit</option>
-        </select>
+        <input type="text" id="transaction-type" name="transaction-type" value="Credit" readonly>
         <input type="text" id="description" name="description" placeholder="Description" required>
         <input type="text" id="location" name="location" placeholder="Location" required>
         <p id="error-message" style="color: red; display: none;">All fields are required. Please fill them in.</p>
         <button type="button" onclick="processPayment()">Submit Payment</button>
     </form>
+
 
     <!-- Single MFA Container -->
     <div id="mfa-container">
@@ -121,36 +124,6 @@
             document.getElementById('payment-form').style.display = 'block'; // Show the payment form
         }
 
-        // Function to process the payment and show MFA fields based on the payment sum
-        function processPayment() {
-            const sum = parseFloat(document.getElementById('sum').value);
-            const paymentMessage = document.getElementById('payment-message');
-
-            // Validate form fields
-            const iban = document.getElementById('iban').value.trim();
-            const accountName = document.getElementById('name').value.trim();
-            const currency = document.getElementById('currency').value.trim();
-            const type = document.getElementById('transaction-type').value.trim();
-            const description = document.getElementById('description').value.trim();
-            const location = document.getElementById('location').value.trim();
-            const errorMessage = document.getElementById('error-message');
-
-            if (!iban || !accountName || isNaN(sum) || sum <= 0 || !currency || !type || !description || !location) {
-                errorMessage.style.display = 'block'; // Show error message
-                return;
-            } else {
-                errorMessage.style.display = 'none'; // Hide error message
-            }
-
-            // Show appropriate MFA form based on the amount
-            if (sum < 50000) {
-                document.getElementById('mfa-container').style.display = 'block'; // Show single MFA
-                document.getElementById('dual-mfa-container').style.display = 'none'; // Hide dual MFA
-            } else {
-                document.getElementById('dual-mfa-container').style.display = 'block'; // Show dual MFA
-                document.getElementById('mfa-container').style.display = 'none'; // Hide single MFA
-            }
-        }
     </script>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Ensure that app.js is correctly linked -->

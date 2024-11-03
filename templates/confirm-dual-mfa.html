@@ -1,22 +1,30 @@
+<!-- templates/confirm-transaction.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Transaction</title>
+    <title>Transaction Confirmation</title>
 </head>
 <body>
-    <h1>Confirm Transaction: {{ transaction.transaction_id }}</h1>
+    <h1>Confirm Transaction</h1>
+    <p>Transaction ID: {{ transaction.transaction_id }}</p>
     <p>Amount: {{ transaction.amount }} {{ transaction.currency }}</p>
     <p>Account Name: {{ transaction.account_name }}</p>
     <p>Account Number: {{ transaction.account_number }}</p>
-    <p>Type: {{ transaction.type | capitalize }}</p> <!-- Display the transaction type (debit/credit) -->
     <p>Description: {{ transaction.description }}</p>
     <p>Location: {{ transaction.location }}</p>
-
     <form method="POST">
-        <input type="number" name="mfaToken" placeholder="Enter MFA Token" required>
-        <button type="submit">Approve Transaction</button>
+        <button type="submit">Confirm Transaction</button>
     </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </body>
 </html>

@@ -23,7 +23,6 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)  # Added email column
 
 
-# Define the Transaction model
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     transaction_id = db.Column(db.String(50), unique=True, nullable=False)
@@ -37,6 +36,7 @@ class Transaction(db.Model):
     account_number = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(100), nullable=True)
+    second_user = db.Column(db.String(80), nullable=True)  # Add this line
 
 # Load transactions from transactions.yaml
 def load_transactions_from_yaml():
@@ -89,19 +89,19 @@ def get_last_transaction_id():
 
 
 def add_transaction_to_history(transaction_data):
+    # Generate a new transaction ID if needed
     transaction_id = generate_next_transaction_id()
     transaction_data['transaction_id'] = transaction_id
 
     logging.info(f"Adding transaction with ID: {transaction_id}")
 
-    # Extract account information from nested dictionary
-    account_info = transaction_data.get('account', {})
-    account_name = account_info.get('name', 'Unknown Account')
-    account_number = account_info.get('account_number', 'Unknown Account Number')
+    # Extract account information from transaction_data
+    account_name = transaction_data.get('account_name', 'Unknown Account')
+    account_number = transaction_data.get('account_number', 'Unknown Account Number')
 
-    # Add the transaction to the database
+    # Add the transaction to the database as a Transaction instance
     new_transaction = Transaction(
-        transaction_id=transaction_data['transaction_id'],
+        transaction_id=transaction_id,
         date=transaction_data['date'],
         time=transaction_data['time'],
         amount=transaction_data['amount'],
@@ -111,20 +111,21 @@ def add_transaction_to_history(transaction_data):
         account_name=account_name,
         account_number=account_number,
         description=transaction_data['description'],
-        location=transaction_data['location']
+        location=transaction_data['location'],
+        second_user=transaction_data.get('second_user')  # Ensure second_user is included if required
     )
     db.session.add(new_transaction)
     db.session.commit()
 
-    # Load the current transactions from YAML and append the new transaction
+    # Now save to the YAML file, using a dictionary format
     transactions = load_transactions_from_yaml()
-    
-    # Ensure no duplicates are being appended
+
+    # Check if the transaction ID already exists in the YAML data
     existing_transaction_ids = {txn['transaction_id'] for txn in transactions}
-    
     if transaction_id not in existing_transaction_ids:
+        # Append the transaction data as a dictionary
         transactions.append({
-            'transaction_id': transaction_data['transaction_id'],
+            'transaction_id': transaction_id,
             'date': transaction_data['date'],
             'time': transaction_data['time'],
             'amount': transaction_data['amount'],
@@ -138,15 +139,14 @@ def add_transaction_to_history(transaction_data):
             'description': transaction_data['description'],
             'location': transaction_data['location']
         })
-        logging.info(f"Transaction with ID {transaction_id} appended to transaction list.")
-        logging.info(f"Number of transactions to be saved: {len(transactions)}")
-        
+        logging.info(f"Transaction with ID {transaction_id} added to YAML transaction list.")
+
         # Save the updated transactions back to the YAML file
         save_transactions_to_yaml(transactions)
-
         logging.info(f"Transaction {transaction_id} added to history with status: {transaction_data['status']}")
     else:
         logging.info(f"Transaction {transaction_id} already exists in YAML. Skipping addition.")
+
 
 
 

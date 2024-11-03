@@ -2,8 +2,12 @@ users:
   admin:
     password: admin
     mfa: 123
-    email: anna.zelenajova@ait.ac.at
+    email: aa.zelenajova@gmail.com
   swilliams:
     password: tastydishes
     mfa: 456
+    email: anna.zelenajova@ait.ac.at
+  test:
+    password: test
+    mfa: 789
     email: a.zelenajova@gmail.com

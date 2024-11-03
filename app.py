@@ -3,10 +3,9 @@ from dotenv import load_dotenv
 import os
 
 from flask import Flask
-from flask_mail import Mail
 from flask_cors import CORS
-
-from backend.database import build_db, User, print_all_users  # Ensure User and print_all_users are imported
+from backend.database import build_db, print_all_users
+from extensions import mail  # Import mail from extensions
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -14,39 +13,41 @@ logging.basicConfig(level=logging.DEBUG)
 # Load environment variables from a .env file
 load_dotenv()
 
-# Initialize the Flask app
-app = Flask(__name__)
-app.secret_key = 'supersecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # Using SQLite for simplicity
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def create_app():
+    # Initialize the Flask app
+    app = Flask(__name__)
+    app.secret_key = 'supersecretkey'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Email Configuration using environment variables
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')  # Update with correct SMTP server
-app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')  # Using port 587 for TLS
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'False') == 'True'  # Enable TLS
-app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False') == 'True' # Do not use SSL, as TLS is enabled
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Get mail username from .env
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # Get mail password from .env
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')  # Get sender address from .env
+    # Mailgun SMTP configuration
+    app.config['MAIL_SERVER'] = 'smtp.mailgun.org'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
+    # Initialize extensions with the app
+    mail.init_app(app)
+    CORS(app)
 
-# Initialize Flask-Mail
-mail = Mail(app)
+    # Build the database and insert initial users from the config file
+    with app.app_context():
+        build_db(app)
+        print_all_users()
 
-# Enable Cross-Origin Resource Sharing (CORS)
-CORS(app)
+    # Import and register blueprints within the create_app function
+    from routes import api
+    app.register_blueprint(api, url_prefix='/')
 
-# Build the database and insert initial users from the config file
-build_db(app)
+    return app
 
-# Ensure the print_all_users is executed within the app context
-with app.app_context():
-    print_all_users()
-
-# Import the routes and register the blueprint
-from routes import api
-app.register_blueprint(api, url_prefix='/')  # No need to pass `mail=mail`
+# Create the app instance
+app = create_app()
 
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
+

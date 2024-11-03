@@ -9,10 +9,19 @@ import base64
 import json
 import os
 import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from flask import current_app
 
 orbis_endpoint = os.getenv('ORBIS')
+
+# Set up logging to print to the console at DEBUG level
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
 
 # Create a blueprint for the routes
 api = Blueprint('api', __name__)
@@ -22,6 +31,51 @@ api = Blueprint('api', __name__)
 def index():
     return render_template('login.html')
 
+
+@api.route('/send-test-email', methods=['GET'])
+def send_test_email():
+    smtp_server = "smtp.mailgun.org"
+    port = 587  # Try 465 for SSL if needed
+    login = current_app.config['MAIL_USERNAME']
+    password = current_app.config['MAIL_PASSWORD']
+    to_address = "a.zelenajova@gmail.com"
+    subject = "Test Email from Flask"
+    body = "This is a test email from Flask using smtplib directly."
+
+    # Set up the message
+    msg = MIMEMultipart()
+    msg['From'] = current_app.config['MAIL_DEFAULT_SENDER']
+    msg['To'] = to_address
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    server = None
+    try:
+        current_app.logger.info(f"Attempting to send email to: {to_address}")
+        
+        # Initialize the server connection
+        server = smtplib.SMTP(smtp_server, port)
+        
+        # Start TLS
+        response = server.starttls()
+        current_app.logger.info(f"TLS response: {response}")
+
+        # Attempt login
+        response = server.login(login, password)
+        current_app.logger.info(f"Login response: {response}")
+        
+        # Send the email
+        server.sendmail(login, to_address, msg.as_string())
+        current_app.logger.info(f"Email sent successfully to: {to_address}")
+        
+        return f"Test email sent successfully to {to_address}!"
+    
+    except smtplib.SMTPServerDisconnected as e:
+        current_app.logger.error(f"SMTP server disconnected unexpectedly. Error: {e}")
+        return "SMTP server disconnected unexpectedly. Please check your connection and settings.", 500
+    
+
+    
 # Login route
 @api.route('/login', methods=['POST'])
 def login():
@@ -124,14 +178,19 @@ def send_to_orbiscloud(transaction_data):
 def verify_dual_mfa():
     data = request.json
     mfa_token = data.get('mfaToken')
-    second_username = data.get('secondUsername')  # Second employee username
+    second_username = data.get('secondUsername')
     amount = data.get('amount')
     iban = data.get('iban')
-    account_name = data.get('accountName')
+    account_name = data.get('account_name')
     currency = data.get('currency')
     transaction_type = data.get('type')
     description = data.get('description')
     location = data.get('location')
+
+    # Ensure all required fields are provided
+    required_fields = [mfa_token, second_username, amount, iban, account_name, currency, transaction_type, description]
+    if not all(required_fields):
+        return jsonify({"error": "All fields are required for dual MFA."}), 400
 
     # Ensure the user is logged in
     if 'username' not in session:
@@ -149,14 +208,14 @@ def verify_dual_mfa():
 
     if not second_user:
         return jsonify({"error": "The second user with the provided username does not exist"}), 404
-    
+
     if second_user.username == username:
         return jsonify({"error": "The second user cannot be the same as the logged-in user"}), 400
 
     # Generate the transaction ID (TXN...)
     transaction_id = generate_next_transaction_id()
 
-    # Save transaction data to the database (pending approval)
+    # Create transaction data as a dictionary
     transaction_data = {
         'transaction_id': transaction_id,
         'date': datetime.now().strftime("%Y-%m-%d"),
@@ -168,78 +227,109 @@ def verify_dual_mfa():
         'account_name': account_name,
         'account_number': iban,
         'description': description,
-        'location': location
+        'location': location,
+        'second_user': second_user.username
     }
 
-    # Add the transaction to history, mark it as pending approval
+    # Add the transaction to history
     add_transaction_to_history(transaction_data)
 
-    # Start a background thread to auto-expire the transaction in 2 minutes
-    app = current_app._get_current_object()  # Explicitly get current app for the thread
-    expire_thread = threading.Thread(target=auto_expire_transaction, args=(app, transaction_id,))
-    expire_thread.start()
-
-    # Generate the approval link for the second user
-    approval_link = url_for('api.confirm_dual_mfa', transaction_id=transaction_id, _external=True)
-
-    # Send an email to the second user with the transaction ID and approval link
+    # Send the approval link to the second user
+    approval_link = url_for('api.login_dual_mfa', transaction_id=transaction_id, _external=True)
     try:
-        logging.info("Trying to send email...")
+        logging.info("Attempting to send email...")
         mail = current_app.extensions.get('mail')
 
-        # Create the message
+        # Create the email message
         msg = Message(
             subject="Transaction Approval Needed",
-            recipients=[second_user.email],  # Use the second user's email for sending
-            body=f"Hello {second_user.username},\n\nYou need to approve the transaction {transaction_id} for {currency} {amount} .\n\nPlease click the following link to view the transaction details and approve it:\n\n{approval_link}\n\nThanks!",
+            recipients=[second_user.email],
+            body=f"Hello {second_user.username},\n\nYou need to approve the transaction {transaction_id} for {currency} {amount}.\n\nPlease click the link below to approve:\n\n{approval_link}\n\nThanks!",
             sender=current_app.config['MAIL_DEFAULT_SENDER']
         )
 
         # Send the email
         mail.send(msg)
+        logging.info(f"Email sent to {second_user.email}.")
 
-        logging.info(f"Email successfully sent to {second_user.email}.")  # Log success
         return jsonify({"success": True, "message": f"Email sent to {second_user.username} for approval", "transaction_id": transaction_id}), 200
     except Exception as e:
-        logging.error(f"Failed to send email. Error: {str(e)}")  # Log the error message
+        logging.error(f"Failed to send email. Error: {str(e)}")
         return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
 
 
 
-@api.route('/confirm-dual-mfa/<transaction_id>', methods=['GET', 'POST'])
-def confirm_dual_mfa(transaction_id):
-        # Check if the user is logged in
-    if 'username' not in session:
-        return redirect(url_for('api.index'))  # If not logged in, redirect to login
-    # Retrieve the transaction from the database
-    transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
 
+
+
+from flask import flash, session  # Import necessary modules
+
+@api.route('/login-dual-mfa/<transaction_id>', methods=['GET', 'POST'])
+def login_dual_mfa(transaction_id):
+    logging.info(f"Entering login_dual_mfa with transaction_id: {transaction_id}")
+
+    transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
     if not transaction:
-        return "Transaction not found", 404
+        flash("Transaction not found.")
+        return redirect(url_for('api.payment_unsuccess'))
+
+    logging.info(f"Designated second user for transaction {transaction_id}: {transaction.second_user}")
 
     if request.method == 'GET':
-        # Render a template showing the transaction details and a form for entering the MFA token
-        return render_template('confirm-dual-mfa.html', transaction=transaction)
-    
+        return render_template('login-dual-mfa.html', transaction_id=transaction_id)
+
     if request.method == 'POST':
-        # Get the second user's MFA token from the form
-        second_mfa_token = request.form.get('mfaToken')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        mfa_token = request.form.get('mfaToken')
 
-        # Ensure the second user is logged in
-        if 'username' not in session:
-            return jsonify({"error": "Unauthorized"}), 401
+        # Confirm that the user attempting to log in is the designated second user
+        if username != transaction.second_user:
+            logging.warning(f"Unauthorized attempt by user {username} for transaction {transaction_id}.")
+            flash("You are not authorized to approve this transaction.")
+            return redirect(url_for('api.payment_unsuccess'))
 
-        # Find the second user by their session username
-        second_user = User.query.filter_by(username=session['username']).first()
+        second_user = User.query.filter_by(username=username).first()
+        if not second_user or second_user.password != password or str(second_user.mfa) != str(mfa_token):
+            flash("Invalid credentials. Please try again.")
+            logging.warning(f"Invalid login attempt for user: {username} in dual MFA.")
+            return render_template('login-dual-mfa.html', transaction_id=transaction_id)
 
-        if not second_user or str(second_user.mfa) != str(second_mfa_token):
-            return jsonify({"error": "Invalid MFA token for the second user"}), 400
+        session['dual_mfa_user'] = username
+        logging.info(f"Dual MFA login successful. Session set for user: {session['dual_mfa_user']}")
+        return redirect(url_for('api.confirm_dual_mfa', transaction_id=transaction_id))
 
-        # If the MFA token is valid, approve the transaction
+
+@api.route('/confirm-dual-mfa/<transaction_id>', methods=['GET', 'POST'])
+def confirm_dual_mfa(transaction_id):
+    logging.info(f"Entered confirm_dual_mfa route with transaction_id: {transaction_id}")
+
+    transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
+    if not transaction:
+        logging.error(f"Transaction {transaction_id} not found")
+        return "Transaction not found", 404
+
+    # Check if session has the correct dual MFA user
+    if 'dual_mfa_user' not in session:
+        logging.warning("Session is empty or expired. Redirecting to dual MFA login.")
+        flash("Session expired. Please log in to approve the transaction.")
+        return redirect(url_for('api.login_dual_mfa', transaction_id=transaction_id))
+
+    # Verify that the logged-in user is the designated second user
+    if session['dual_mfa_user'] != transaction.second_user:
+        flash("Unauthorized access. You are not the designated approver for this transaction.")
+        logging.warning("Unauthorized access attempt for dual MFA confirmation.")
+        return redirect(url_for('api.payment_unsuccess'))
+
+    if request.method == 'GET':
+        logging.info("Rendering confirmation page for dual MFA.")
+        return render_template('confirm-dual-mfa.html', transaction=transaction)
+
+    # Handle POST request for approval
+    if request.method == 'POST':
         transaction.status = 'Completed'
         db.session.commit()
 
-        # Convert transaction data to dictionary format before sending
         transaction_data = {
             'transaction_id': transaction.transaction_id,
             'date': transaction.date,
@@ -251,12 +341,15 @@ def confirm_dual_mfa(transaction_id):
             'account_name': transaction.account_name,
             'account_number': transaction.account_number,
             'description': transaction.description,
-            'location': transaction.location
+            'location': transaction.location,
+            'second_user': transaction.second_user
         }
-
         send_to_orbiscloud(transaction_data)
+        flash("Transaction successfully confirmed and sent.")
+        return redirect(url_for('api.payment_success'))
 
-        return jsonify({"success": True, "message": "Transaction approved successfully!"})
+
+
 
 
 
@@ -264,18 +357,26 @@ def confirm_dual_mfa(transaction_id):
 @api.route('/verify-payment-mfa', methods=['POST'])
 def verify_payment_mfa():
     data = request.json
-    amount = data.get('amount')
-    mfa_token = data.get('mfaToken')
+    print("Received data for payment MFA verification:", data)  # Debugging statement
     second_email = data.get('secondEmail', None)  # Second email for dual MFA only
+    mfa_token = data.get('mfaToken')
+    amount = data.get('amount')
+    iban = data.get('iban')
+    account_name = data.get('account_name')
+    currency = data.get('currency')
+    transaction_type = data.get('type')
+    description = data.get('description')
+    location = data.get('location')
 
+    # Transaction data object for single MFA
     transaction_data = {
         'amount': amount,
-        'currency': data.get('currency', 'EUR'),
-        'type': data.get('type', 'debit'),
-        'account_name': data.get('accountName', 'Default Account Name'),
-        'account_number': data.get('iban', 'Default IBAN'),
-        'description': data.get('description', 'Payment description'),
-        'location': data.get('location', 'Unknown Location'),
+        'currency': currency,
+        'type': transaction_type,
+        'account_name': account_name,
+        'account_number': iban,
+        'description': description,
+        'location': location,
         'date': datetime.now().strftime("%Y-%m-%d"),
         'time': datetime.now().strftime("%H:%M:%S"),
     }
