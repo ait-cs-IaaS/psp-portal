@@ -57,6 +57,7 @@
                         <th>Time</th>
                         <th>Amount</th>
                         <th>Currency</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th>Account Name</th>
                         <th>Account Number</th>
@@ -72,6 +73,7 @@
                         <td>{{ transaction.time }}</td>
                         <td>{{ transaction.amount }}</td>
                         <td>{{ transaction.currency }}</td>
+                        <td>{{ transaction.type | capitalize }}</td>
                         <td>{{ transaction.status | capitalize }}</td>
                         <td>{{ transaction.account_name | capitalize }}</td>
                         <td>{{ transaction.account_number }}</td>
