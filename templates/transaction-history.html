@@ -41,6 +41,7 @@
                 <option value="desc" {% if filters.amount_sort == 'desc' %}selected{% endif %}>Sort: Descending</option>
                 <option value="asc" {% if filters.amount_sort == 'asc' %}selected{% endif %}>Sort: Ascending</option>
             </select>
+            
 
             <button class="btn btn-primary filter-input" onclick="applyFilters()">Apply Filters</button>
             <button class="btn btn-secondary filter-input" onclick="removeFilters()">Remove Filters</button>

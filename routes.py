@@ -416,10 +416,10 @@ def receive_transaction():
 def transaction_history():
     if 'username' not in session:
         return redirect(url_for('api.index'))
-    
+
     # Pagination and sorting parameters
     page = request.args.get('page', 1, type=int)
-    amount_sort = request.args.get('amount_sort', 'desc')  # Default amount sorting order is descending
+    amount_sort = request.args.get('amount_sort', '')  # Changed from 'desc' to ''
 
     # Filtering parameters from request arguments
     filter_id = request.args.get('filter_id', '').strip()
@@ -455,7 +455,7 @@ def transaction_history():
     elif amount_sort == 'desc':
         transactions_query = transactions_query.order_by(Transaction.amount.desc())
     else:
-        # Default to sorting by date and time in descending order if no amount sorting is applied
+        # Default sorting by date and time in descending order
         transactions_query = transactions_query.order_by(Transaction.date.desc(), Transaction.time.desc())
 
     # Paginate the results
@@ -480,6 +480,7 @@ def transaction_history():
                            page=page, 
                            total_pages=transactions_paginated.pages,
                            filters=filters)
+
 
 
 
