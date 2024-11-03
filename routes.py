@@ -97,13 +97,13 @@ def payment():
 
 
 def auto_expire_transaction(app, transaction_id):
-    with app.app_context():  # Use the Flask app context in the thread
-        time.sleep(120)  # Wait for 2 minutes
+    with app.app_context():  
+        time.sleep(300)  # 5 min expiration for dual mfa 
         transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
         if transaction and transaction.status == 'Pending Approval':
             transaction.status = 'Not Authorized'
             db.session.commit()
-            logging.info(f"Transaction {transaction_id} automatically marked as Not Authorized.")
+            logging.info(f"Transaction {transaction_id} automatically marked as 'Not Authorized' due to timeout.")
 
 
 def send_to_orbiscloud(transaction_data):
@@ -210,10 +210,14 @@ def verify_dual_mfa():
         mail.send(msg)
         logging.info(f"Email sent to {second_user.email}.")
 
+        # Start a new thread to automatically expire the transaction if not approved within 1 minute
+        threading.Thread(target=auto_expire_transaction, args=(current_app._get_current_object(), transaction_id)).start()
+
         return jsonify({"success": True, "message": f"Email sent to {second_user.username} for approval", "transaction_id": transaction_id}), 200
     except Exception as e:
         logging.error(f"Failed to send email. Error: {str(e)}")
         return jsonify({"error": f"Failed to send email. Error: {str(e)}"}), 500
+
 
 
 
