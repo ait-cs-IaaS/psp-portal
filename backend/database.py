@@ -36,7 +36,9 @@ class Transaction(db.Model):
     account_number = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(100), nullable=True)
-    second_user = db.Column(db.String(80), nullable=True)  # Add this line
+    second_user = db.Column(db.String(80), nullable=True)
+    link_used = db.Column(db.Boolean, default=False)  # New column to track link usage
+
 
 # Load transactions from transactions.yaml
 def load_transactions_from_yaml():

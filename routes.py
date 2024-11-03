@@ -268,33 +268,41 @@ from flask import flash, session  # Import necessary modules
 def login_dual_mfa(transaction_id):
     logging.info(f"Entering login_dual_mfa with transaction_id: {transaction_id}")
 
+    # Retrieve the transaction from the database
     transaction = Transaction.query.filter_by(transaction_id=transaction_id).first()
-    if not transaction:
-        flash("Transaction not found.")
-        return redirect(url_for('api.payment_unsuccess'))
 
-    logging.info(f"Designated second user for transaction {transaction_id}: {transaction.second_user}")
+    # Check if the transaction exists and if the link has already been used
+    if not transaction:
+        logging.error(f"Transaction {transaction_id} not found.")
+        return "Transaction not found", 404
+    elif transaction.link_used:
+        logging.warning(f"Transaction {transaction_id} link has already been used.")
+        return "This approval link has already been used and is now inactive.", 403
 
     if request.method == 'GET':
+        # Render the login page for second user's dual MFA verification
         return render_template('login-dual-mfa.html', transaction_id=transaction_id)
 
     if request.method == 'POST':
+        # Capture login form details
         username = request.form.get('username')
         password = request.form.get('password')
         mfa_token = request.form.get('mfaToken')
 
-        # Confirm that the user attempting to log in is the designated second user
-        if username != transaction.second_user:
-            logging.warning(f"Unauthorized attempt by user {username} for transaction {transaction_id}.")
-            flash("You are not authorized to approve this transaction.")
-            return redirect(url_for('api.payment_unsuccess'))
-
+        # Look up second user in the database
         second_user = User.query.filter_by(username=username).first()
+
+        # Confirm credentials and log
         if not second_user or second_user.password != password or str(second_user.mfa) != str(mfa_token):
             flash("Invalid credentials. Please try again.")
             logging.warning(f"Invalid login attempt for user: {username} in dual MFA.")
             return render_template('login-dual-mfa.html', transaction_id=transaction_id)
 
+        # Mark the link as used
+        transaction.link_used = True
+        db.session.commit()
+
+        # Set session data for dual MFA and log the designated user
         session['dual_mfa_user'] = username
         logging.info(f"Dual MFA login successful. Session set for user: {session['dual_mfa_user']}")
         return redirect(url_for('api.confirm_dual_mfa', transaction_id=transaction_id))
