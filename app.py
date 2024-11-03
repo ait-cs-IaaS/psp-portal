@@ -20,14 +20,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Mailgun SMTP configuration
-    app.config['MAIL_SERVER'] = 'smtp.mailgun.org'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USE_SSL'] = False
-    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+    app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')  # Update with correct SMTP server
+    app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')  # Using port 587 for TLS
+    app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'False') == 'True'  # Enable TLS
+    app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False') == 'True' # Do not use SSL, as TLS is enabled
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Get mail username from .env
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # Get mail password from .env
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')  # Get sender address from .env
+
 
     # Initialize extensions with the app
     mail.init_app(app)

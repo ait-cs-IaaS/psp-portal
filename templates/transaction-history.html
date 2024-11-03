@@ -37,9 +37,9 @@
 
             <!-- Sorting Dropdown for Ascending, Descending, or No Sort -->
             <select class="form-control filter-input" id="amount-sort-order">
-                <option value="">Sort by Amount: No Sort</option>
-                <option value="desc" {% if filters.amount_sort == 'desc' %}selected{% endif %}>Sort by Amount: Descending</option>
-                <option value="asc" {% if filters.amount_sort == 'asc' %}selected{% endif %}>Sort by Amount: Ascending</option>
+                <option value="">Sort by Amount: None</option>
+                <option value="desc" {% if filters.amount_sort == 'desc' %}selected{% endif %}>Sort: Descending</option>
+                <option value="asc" {% if filters.amount_sort == 'asc' %}selected{% endif %}>Sort: Ascending</option>
             </select>
 
             <button class="btn btn-primary filter-input" onclick="applyFilters()">Apply Filters</button>
